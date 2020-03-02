@@ -208,25 +208,28 @@ class Index extends Component {
   }
 
   handleOptsJobClick = (optsJob) => {
-    console.log(optsJob);
     const { job } = optsJob;
-    const { jobs_list } = this.state;
     this.setState({
       active: job,
-      loading: true
+      loading: true,
+      currPageNum: 1,
     }, () => {
       // 调用接口
-      console.log('回调')
-      setTimeout(() => {
-        let jobData = Array.from({ length: 10 }, () => {
-          return jobs_list[Math.floor(Math.random() * 7)]
-        });
-        console.log(jobData, '随机打乱的岗位集合');
-        this.setState({
-          jobs_list: jobData,
-          loading: false
-        });
-      }, 1000);
+      const { active, currPageNum } = this.state;
+      Taro.request({
+        url: `http://localhost:5000/job/list?job_type=${active}&nextPageNum=${currPageNum}`,
+      }).then(res => {
+        Taro.hideLoading()
+        console.log(res.data);
+        if(res.data.code === 200) {
+          this.setState({
+            loading: false,
+            jobs_list: res.data.data.list,
+            jobTotalNum: res.data.data.total,
+            currPageNum: res.data.data.currentNum
+          });
+        }
+      })
     });
   }
 
@@ -245,33 +248,29 @@ class Index extends Component {
     console.log('触发了下拉刷新。。。')
     if (this.state.loading) return
     this.setState({
-      loading: true
+      loading: true,
+      currPageNum: 1,
+      total: 0,
     })
     Taro.showLoading({
       title: '加载中'
     })
-    setTimeout(() => {
-      let jobData = Array.from({ length: 10 }, () => {
-        return serverData[Math.floor(Math.random() * 7)]
-      });
-      this.setState({
-        jobs_list: jobData,
-        loading: false
-      });
+    // 重新刷新数据
+    const { currPageNum, active } = this.state;
+    Taro.request({
+      url: `http://localhost:5000/job/list?job_type=${active}&nextPageNum=${currPageNum}`,
+    }).then(res => {
       Taro.hideLoading()
-    }, 1000);
-    // 重新1刷新数据
-    // Taro.request({
-    //   url: ''
-    // }).then(res => {
-    //   Taro.hideLoading()
-    //   if(res.data.success) {
-    //     this.setState({
-    //       jobs_list: res.data.data,
-    //       loading: false
-    //     });
-    //   }
-    // })
+      console.log(res.data);
+      if(res.data.code === 200) {
+        this.setState({
+          loading: false,
+          jobs_list: res.data.data.list,
+          jobTotalNum: res.data.data.total,
+          currPageNum: res.data.data.currentNum
+        });
+      }
+    })
   }
 
   appendNextPageList = () => {
