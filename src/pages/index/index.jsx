@@ -98,6 +98,8 @@ class Index extends Component {
   state = {
     search_val: '',
     jobs_list: [],
+    jobTotalNum: 0,
+    currPageNum: 1,
     optsJobs_list: [
       {
         id: 1,
@@ -149,29 +151,33 @@ class Index extends Component {
     Taro.showLoading({
       title: '加载中...'
     })
-    setTimeout(() => {
-      let jobData = Array.from({ length: 10 }, () => {
-        return serverData[Math.floor(Math.random() * 7)]
-      });
-      console.log(jobData, 'jobData');
-      this.setState({
-        jobs_list: jobData,
-        loading: false
-      });
-      Taro.hideLoading()
-    }, 1000);
-    // 做初始化获数据
-    // Taro.request({
-    //   url: '/api/getJobsLists',
-    // }).then(res => {
+    // setTimeout(() => {
+    //   let jobData = Array.from({ length: 10 }, () => {
+    //     return serverData[Math.floor(Math.random() * 7)]
+    //   });
+    //   console.log(jobData, 'jobData');
+    //   this.setState({
+    //     jobs_list: jobData,
+    //     loading: false
+    //   });
     //   Taro.hideLoading()
-    //   if(res.data.success) {
-    //     this.setState({
-    //       loading: false,
-    //       jobs_list: res.data.data
-    //     })
-    //   }
-    // })
+    // }, 1000);
+    // 做初始化获数据
+    const { currPageNum, active } = this.state;
+    Taro.request({
+      url: `http://localhost:5000/job/list?job_type=${active}&nextPageNum=${currPageNum}`,
+    }).then(res => {
+      Taro.hideLoading()
+      console.log(res.data);
+      if(res.data.code === 200) {
+        this.setState({
+          loading: false,
+          jobs_list: res.data.data.list,
+          jobTotalNum: res.data.data.total,
+          currPageNum: res.data.data.currentNum
+        });
+      }
+    })
   }
 
   componentWillReceiveProps(nextProps) {

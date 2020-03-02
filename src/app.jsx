@@ -31,15 +31,15 @@ class App extends Component {
 
   config = {
     pages: [
-      'pages/publish/index',
       'pages/index/index',
+      'pages/job_detail/index',
+      'pages/publish/index',
       'pages/demo/index',
       'pages/home/index',
       'pages/test/index',
       'pages/rent_detail/index',
       'pages/rent/index',
       'pages/my/index',
-      'pages/job_detail/index',
       'pages/recordUpdate/index',
       'pages/offer/index',
       'pages/resume/index'

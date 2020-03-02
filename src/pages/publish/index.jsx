@@ -89,8 +89,11 @@ class Publish extends Component {
     })
   }
   handleSwitchOffical = () => {
+    console.log(this.state.job_isOffical);
     this.setState({
       job_isOffical: !this.state.job_isOffical
+    }, () => {
+      // console.log(this.state.job_isOffical);
     });
   }
 
@@ -108,10 +111,24 @@ class Publish extends Component {
       job_isOffical
     };
     console.log(params);
-    // let isOk =  Object.values(params).filter(val => (val === '' || val === ));
+
+    // 空字符输入形式
+    const validVal = {
+      job_name,
+      job_email,
+      job_desc,
+    };
+    let isEmptyValArr =  Object.values(validVal).filter(val => val === '');
     // 有值既有空的情况
-    // console.log(isOk, 'isOk');
-    // if(isOk.length) return;
+    console.log(isEmptyValArr, 'isEmptyValArr');
+    if(isNullObj(job_origin) || isNullObj(job_type) || job_city.length === 0 || isEmptyValArr.length !== 0) {
+      Taro.showToast({
+        title: '请完善相关信息',
+        icon: 'none',
+      });
+      return ;
+    }
+
 
     console.log('Bearer ' + Taro.getStorageSync('TOKEN'), 'haha')
     Taro.request({

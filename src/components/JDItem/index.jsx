@@ -15,9 +15,9 @@ class JDItem extends Component {
   }
 
   render() {
-    const { title, company, origin, jobs, address, img, id } = this.props;
+    const { title, company, origin, jobs, address, img, job_id } = this.props;
     return (
-      <View className='jd_item' onClick={() => {this.props.onGo(id)}}>
+      <View className='jd_item' onClick={() => {this.props.onGo(job_id)}}>
         <Image className='jd_item_img' src={img} />
         <View className='jd_item_content'>
           <View className='jd_item_content_title'>{title}</View>
