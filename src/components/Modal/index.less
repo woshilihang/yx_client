@@ -1,0 +1,48 @@
+.auth_modal {
+  .modal_mask {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .3);
+    z-index: 1000;
+  }
+  .modal {
+    position: absolute;
+    z-index: 1001;
+    width: 580px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    text-align: center;
+    padding: 50px 30px 25px;
+    .modal_title {
+      line-height: 78px;
+      font-size: 36px;
+      font-weight: bold;
+      color: #333333;
+    }
+    .modal_content {
+      color: #666666;
+      font-size: 26px;
+    }
+    .modal_btn_list {
+      margin-top: 28px;
+      .modal_btn {
+        display: inline-block;
+        width: 240px;
+        height: 80px;
+        &.modal_btn_cancel {
+          margin-right: 38px;
+          background-color: rgba(0, 0, 0, .2);
+        }
+        &.modal_btn_confirm {
+          background-color: #67c97d;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}

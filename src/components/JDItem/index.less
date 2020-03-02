@@ -1,0 +1,63 @@
+.jd_item {
+  display: flex;
+  flex-direction: row;
+  // margin: 16px 0;
+  padding: 16px 0;
+  align-items: center;
+  border-bottom: 2px solid #f4f4f4;
+  .jd_item_img {
+    width: 108px;
+    height: 108px;
+    margin-right: 28px;
+  }
+  .jd_item_content {
+    flex: 1;
+    .jd_item_content_title {
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 48px;
+      color: #333333;
+    }
+    .jd_item_content_detail {
+      line-height: 48px;
+      &.co {
+        font-size: 28px;
+        color: #666666;
+        .company {
+          margin-right: 18px;
+        }
+      }
+      &.jl {
+        font-size: 26px;
+        color: #b2b2b2;
+        .jobs {
+          margin-right: 48px;
+          vertical-align: middle;
+          &::before {
+            content: '';
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: url('../../public/images/jobs.png') no-repeat center center;
+            background-size: 32px 32px;
+            vertical-align: middle;
+            margin-right: 8px;
+          }
+        }
+        .location {
+          vertical-align: middle;
+          &::before {
+            content: '';
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: url('../../public/images/location.png') no-repeat center center;
+            background-size: 32px 32px;
+            vertical-align: middle;
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+}

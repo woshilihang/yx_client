@@ -1,0 +1,108 @@
+.txcenter {
+  font-size: 28px;
+  padding: 20px;
+  text-align:center;
+}
+.index {
+  padding: 0 36px;
+  flex-direction: column;
+  .header {
+    display: flex;
+    flex-direction: row;
+    height: 80px;
+    // justify-content: center;
+    align-items: center;
+    .header_address {
+      color: #333333;
+    }
+    .header_search {
+      flex: 1;
+      margin: 0 10px;
+      .header_search_input {
+        position: relative;
+        background-color: #f4f4f4;
+        border-radius: 20px;
+        color: #b2b2b2;
+        line-height: 52px;
+        height: 52px;
+        padding: 4px 0 4px 58px;
+        box-sizing: border-box;
+        &::before{
+          content: '';
+          position: absolute;
+          left: 15px;
+          top: 10px;
+          display: block;
+          width: 32px;
+          height: 32px;
+          background: url('../../public/images/search.png') no-repeat center center;
+          background-size: 32px 32px;
+        }
+      }
+      .header_search_input-placeholder {
+        font-size: 26px;
+        color: #b2b2b2;
+      }
+    }
+    .header_msg {
+      width: 48px;
+      height: 48px;
+    }
+  }
+  .banner {
+    margin: 10px 0;
+    .banner_img {
+      width: 100%;
+      border-radius: 100px;
+      height: 128px;
+      border: 1px solid #cccccc;
+    }
+  }
+  .opts_jobs_list {
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    backface-visibility: hidden;
+    perspective: 1000;
+    -webkit-overflow-scrolling: touch;
+    text-align: justify;
+    .opts_job_item {
+      display: inline-block;
+      padding: 10px;
+      margin: 0 20px;
+      color: #b2b2b2;
+      font-size: 28px;
+      &.actived {
+        color: #333333;
+        font-size: 32px;
+        font-weight: 500;
+        border-bottom: 4px solid #333333;
+      }
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .jd_item_list {
+    margin-top: 28px;
+  }
+  .btn-pub {
+    position: fixed;
+    bottom: 40px;
+    right: 50px;
+    border: none;
+    outline: none;
+    background: linear-gradient(to right, #303030, #636363);
+    color: #ffffff !important;
+    border-radius: 40px;
+    width: 158px;
+    height: 68px;
+    font-size: 30px;
+  }
+}

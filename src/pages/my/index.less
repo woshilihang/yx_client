@@ -1,0 +1,108 @@
+.my {
+  padding: 0 36px;
+  .header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 20px;
+    .header_img {
+      width: 125px;
+      height: 125px;
+      border-radius: 50%;
+      background-color: #ffffff;
+    }
+    .header_content {
+      position: relative;
+      flex: 1;
+      margin-left: 25px;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: center;
+      height: 125px;
+      margin-top: 20px;
+      .header_content-nickname {
+        font-weight: 500;
+        font-size: 36px;
+        line-height: 48px;
+      }
+      .header_content-school {
+        color: #666666;
+        font-size: 28px;
+        line-height: 48px;
+        margin-top: 8px;
+      }
+      .header_content-edit {
+        position: absolute;
+        right: 0;
+        top: 14px;
+        font-size: 28px;
+        color: #666666;
+      }
+    }
+  }
+
+  .oper_list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    border: 1px solid #f5f5f5;
+    margin: 28px 0;
+    box-shadow: 2px 2px #f3f3f3;
+    padding: 20px 0;
+    border-radius: 28px;
+    .oper_item {
+      width: 33%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+      .oper_icon {
+        width: 100px;
+        height: 100px;
+        padding: 15px;
+        border-radius: 10px;
+        box-sizing: border-box;
+      }
+      .oper_txt {
+        font-size: 28px;
+        color: #666666;
+        line-height: 48px;
+      }
+    }
+  }
+  
+  .feedback_list {
+    border: 1px solid #f5f5f5;
+    box-shadow: 2px 2px #f3f3f3;
+    padding: 10px 0;
+    border-radius: 28px;
+    .feedback_item {
+      border-bottom: 2px solid #f4f4f4;
+      padding: 16px 0;
+      margin: 0 28px;
+      overflow: hidden;
+      &:last-child {
+        border-bottom: none;
+      }
+      .feedback_item_txt {
+        font-size: 28px;
+        line-height: 48px;
+        color: #333333;
+      }
+      .feedback_item_icon {
+        float: right;
+        display: block;
+        width: 28px;
+        height: 28px;
+        background: url('../../public/images/my/arrow_right.png') no-repeat center center;
+        padding-top: 10px;
+        margin-top: 10px;
+      }
+    }
+  }
+}
