@@ -1,11 +1,12 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image, Text } from '@tarojs/components';
+import { View, Image, Text, RichText } from '@tarojs/components';
 import { connect } from '@tarojs/redux'
 
 import MyFooter from '../../components/Footer/index'
 import { initAppAuth } from '../../actions/init'
 
 import './index.less'
+import { replaceSpaceToBr } from '../../utils/common';
 
 @connect(({ init, }) => ({ init }), (dispatch) => ({
   onInitAppAuth(payload) {
@@ -124,7 +125,7 @@ class Job_Detail extends Component {
               职位描述
           </View>
             <View className='job_detail_preview_content'>
-              {job_desc}
+              <RichText nodes={(replaceSpaceToBr(job_desc))} />
             </View>
 
             <View className='job_detail_preview_title'>

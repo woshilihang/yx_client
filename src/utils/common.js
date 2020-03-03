@@ -41,3 +41,11 @@ export const removeOfArr = (arr, val) => {
 
   return arr.filter(item => item !== val);
 }
+
+/**
+ * 将含有换行符\n或者\r转换成<Br/>
+ * @param {String} origin_str 
+ */
+export const replaceSpaceToBr = (origin_str) => {
+  return origin_str.replace(/[\n\r]/g, '<Br />');
+}
