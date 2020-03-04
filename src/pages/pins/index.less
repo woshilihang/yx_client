@@ -1,0 +1,36 @@
+.pins {
+  padding: 0 38px;
+  margin: 20px 0;
+  .banner {
+    margin: 10px 0;
+    .banner_img {
+      width: 100%;
+      border-radius: 100px;
+      height: 128px;
+      border: 1px solid #cccccc;
+    }
+  }
+
+  .pins_wrapper {
+    // padding: ;
+    .pins_wrapper_opts {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      height: 60px;
+      line-height: 60px;
+      box-sizing: border-box;
+      .pins_wrapper_opts_item {
+        color: #b2b2b2;
+        font-size: 28px;
+        &.active {
+          color: #333333;
+          font-size: 32px;
+          font-weight: 500;
+          border-bottom: 4px solid #333333;
+        }
+      }
+    }
+  }
+}

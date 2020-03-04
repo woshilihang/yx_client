@@ -34,7 +34,7 @@ class Home extends Component {
         <View className='home_preview' onClick={
           () => {
             Taro.navigateTo({
-              url: '/pages/offer/index'
+              url: '/pages/pins/index'
             })
           }
         }

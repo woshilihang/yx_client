@@ -31,6 +31,7 @@ class App extends Component {
 
   config = {
     pages: [
+      'pages/pins/index',
       'pages/index/index',
       'pages/job_detail/index',
       'pages/publish/index',

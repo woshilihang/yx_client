@@ -1,0 +1,96 @@
+.pins_item {
+  margin-top: 28px;
+  .pins_item_header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .pins_item_header_avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+    }
+    .pins_item_header_info {
+      flex: 1;
+      margin-left: 16px;
+      .pins_item_header_info_title, .pins_item_header_info_desc {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        .name {
+          flex: 1;
+          color: #333333;
+        }
+       .jobs {
+         flex: 1;
+         color: #b2b2b2;
+         font-size: 24px;
+         .bold {
+           font-weight: bold;
+         }
+       }
+       .time {
+        color: #b2b2b2;
+        font-size: 24px;
+       }
+      }
+      .pins_item_header_info_title {
+        line-height: 56px;
+        font-weight: bold;
+      }
+    }
+  }
+
+
+  .pins_item_content {
+    .pins_item_info {
+      margin: 28px 0;
+      color: #333333;
+      font-size: 26px;
+    }
+  }
+
+  .pins_item_footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    // height: 68px;
+    padding: 0 0 16px 0;
+    color: #b2b2b2;
+    font-size: 24px;
+    border-bottom: 2px solid #e3e3e3;
+    .pins_item_item {
+      &.like, &.comment, &.forward {
+        position: relative;
+        vertical-align: middle;
+        &::before {
+          position: absolute;
+          content: '';
+          display: block;
+          width: 36px;
+          height: 36px;
+          right: 28px;
+        }
+      }
+      &.like {
+        &::before {
+          background: url('../../public/images/prize.png') no-repeat;
+          background-size: 36px 36px;
+        }
+      }
+      &.comment {
+        &::before {
+          background: url('../../public/images/comment.png') no-repeat;
+          background-size: 36px 36px;
+        }
+      }
+      &.forward {
+        &::before {
+          background: url('../../public/images/forward.png') no-repeat;
+          background-size: 36px 36px;
+        }
+      }
+    }
+  }
+
+}
