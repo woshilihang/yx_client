@@ -25,6 +25,12 @@ class Pins extends Component {
         },
       ],
       active: 'all',
+      pins_list: [
+        {
+          id: 1,
+          
+        }
+      ]
     };
   }
 
