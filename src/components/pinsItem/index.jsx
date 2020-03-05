@@ -14,7 +14,7 @@ class PinsItem extends Component {
   }
 
   render() {
-    const { nickName, companyName, job, contents, imgUrl } = this.props;
+    const { nickName, companyName, job, contents = '', imgUrl } = this.props;
     return (
       <View className='pins_item'>
         <View className='pins_item_header'>
@@ -38,9 +38,9 @@ class PinsItem extends Component {
 
         <View className='pins_item_content'>
           <View className='pins_item_info'>
-            <RichText nodes={contents} />
+            {/* 设置图片宽度问题 */}
+            <RichText nodes={contents.replace('img','img style="width:100%;"')} />
           </View>
-          {/* <Image /> */}
         </View>
 
         <View className='pins_item_footer'>
