@@ -31,9 +31,12 @@ class App extends Component {
 
   config = {
     pages: [
-      'pages/pins_publish/index',
-      'pages/pins/index',
       'pages/index/index',
+      'pages/my_auth/index',
+      'pages/pins_detail/index',
+      'pages/offer/index',
+      'pages/pins/index',
+      'pages/pins_publish/index',
       'pages/job_detail/index',
       'pages/publish/index',
       'pages/demo/index',
@@ -43,7 +46,6 @@ class App extends Component {
       'pages/rent/index',
       'pages/my/index',
       'pages/recordUpdate/index',
-      'pages/offer/index',
       'pages/resume/index'
     ],
     window: {

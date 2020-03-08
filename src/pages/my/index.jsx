@@ -110,7 +110,7 @@ class My extends Component {
           {
             this.state.oper_list.map(oper => (
               <View className='oper_item' key={oper.id}
-                onClick={oper.gotoUrl ? () => this.handleOperClick(oper.gotoUrl): () => {}}
+                onClick={oper.gotoUrl ? this.handleOperClick.bind(this, oper.gotoUrl): () => {}}
               >
                 <Image className='oper_icon' src={oper.iconPath} />
                 <Text className='oper_txt'>

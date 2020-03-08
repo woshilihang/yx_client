@@ -1,0 +1,85 @@
+.my_auth {
+  padding: 0 36px;
+  .my_auth_title {
+    margin-top: 10px;
+    font-size: 32px;
+    font-weight: bold;
+    padding: 20px 0;
+    color: #333333;
+  }
+  .my_auth_desc {
+    font-size: 24px;
+    color: #b2b2b2;
+    margin: 0 0 28px;
+  }
+  .my_auth_container {
+    overflow: hidden;
+    .my_auth_container_item {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      justify-content: center;
+      overflow: hidden;
+      margin: 12px 0;
+
+      &.area {
+        flex-direction: column;
+      }
+      .my_auth_container_item_lable {
+        color: #333333;
+        font-size: 26px;
+        height: 62px;
+        line-height: 62px;
+      }
+      .my_auth_container_item_input {
+        flex: 1;
+        height: 62px;
+        line-height: 62px;
+        padding: 0 0 0 20px;
+        font-size: 26px;
+        color: #333333;
+        text-align: right;
+      }
+      .my_auth_container_item_input-placeholder {
+        font-size: 26px;
+        color: #868686;
+      }
+      .my_auth_container_item_area {
+        position: relative;
+        width: 80%;
+        height: 260px;
+        margin: 24px auto 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        box-shadow: 0 0 6px 2px #f0f0f0;
+        border-radius: 32px;
+        .my_auth_container_area_img {
+          width: 120px;
+          height: 100px;
+        }
+        .my_auth_container_area_job_img {
+          width: 210px;
+        }
+        .my_auth_container_area_text {
+          font-size: 26px;
+          color: #b2b2b2;
+        }
+        .my_auth_container_area_del {
+          position: absolute;
+          right: 0;
+          top: 10px;
+          background-color: red;
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+  }
+
+  .btn-sub {
+    margin: 20px 0 0;
+  }
+}

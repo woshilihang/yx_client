@@ -12,6 +12,7 @@ import testImg from '../../public/images/test.jpeg'
 
 import JDItem from '../../components/JDItem/index'
 // import MyLoading from '../../components/Loading/index'
+import http from '../../utils/http';
 
 const defaultConfig = {
   search_txt: '搜索职位或公司名称',
@@ -142,12 +143,14 @@ class Index extends Component {
     canShare: true, // 是否允许分享
     isInitShow: true, // 控制是否显示
     userInfo: {},
+    isConfirmPublish: false, // 用户身份是否已认证发布内推信息权限
   }
 
 
   componentDidMount() {
     console.log('loading -- ', this.state.loading);
     console.log(this.props.init);
+
     Taro.showLoading({
       title: '加载中...'
     })
@@ -169,7 +172,7 @@ class Index extends Component {
     }).then(res => {
       Taro.hideLoading()
       console.log(res.data);
-      if(res.data.code === 200) {
+      if (res.data.code === 200) {
         this.setState({
           loading: false,
           jobs_list: res.data.data.list,
@@ -177,7 +180,7 @@ class Index extends Component {
           currPageNum: res.data.data.currentNum
         });
       }
-    })
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -221,7 +224,7 @@ class Index extends Component {
       }).then(res => {
         Taro.hideLoading()
         console.log(res.data);
-        if(res.data.code === 200) {
+        if (res.data.code === 200) {
           this.setState({
             loading: false,
             jobs_list: res.data.data.list,
@@ -237,11 +240,21 @@ class Index extends Component {
     this.props.onInitAppAuth();
   }
 
-  handlePublishClick = () => {
-    console.log('去发布')
-    Taro.navigateTo({
-      url: '/pages/publish/index'
-    })
+  handlePublishClick = async () => {
+    console.log('去发布 触发身份验证');
+    await http.get('/user/msg').then(res => {
+      // console.log('/user/msg res ---', res);
+      if (res && res.code === 200) {
+        this.setState({
+          isConfirmPublish: res.data.isConfirm
+        }, () => {
+          Taro.navigateTo({
+            url: this.state.isConfirmPublish ? '/pages/publish/index' : '/pages/my_auth/index',
+          });
+        });
+      }
+    });
+
   }
 
   updateList = () => {
@@ -262,7 +275,7 @@ class Index extends Component {
     }).then(res => {
       Taro.hideLoading()
       console.log(res.data);
-      if(res.data.code === 200) {
+      if (res.data.code === 200) {
         this.setState({
           loading: false,
           jobs_list: res.data.data.list,

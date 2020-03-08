@@ -12,7 +12,12 @@ class Offer extends Component {
   render() {
     return (
       <View className='resume'>
-        求offer
+        <View className='resumt_content'>
+          content
+        </View>
+        <View className='resumt_footer'>
+          footer
+        </View>
       </View>
     )
   }

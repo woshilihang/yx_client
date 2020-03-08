@@ -92,8 +92,6 @@ class Publish extends Component {
     console.log(this.state.job_isOffical);
     this.setState({
       job_isOffical: !this.state.job_isOffical
-    }, () => {
-      // console.log(this.state.job_isOffical);
     });
   }
 
@@ -181,7 +179,7 @@ class Publish extends Component {
                   optsJobs_list.map(item => (
                     <View className={`publish_preview_opts_item`}
                       key={item.id}
-                      onClick={() => this.handleChangeVal('job_type', item)}
+                      onClick={this.handleChangeVal.bind(this, 'job_type', item)}
                     >
                       {
                         item.name

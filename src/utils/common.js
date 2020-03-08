@@ -47,5 +47,7 @@ export const removeOfArr = (arr, val) => {
  * @param {String} origin_str 
  */
 export const replaceSpaceToBr = (origin_str) => {
+  if(!origin_str) return '';
+  console.log(origin_str, 'origin_str');
   return origin_str.replace(/[\n\r]/g, '<Br />');
 }

@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image, Text } from '@tarojs/components';
+import { View, Image, Text, Button } from '@tarojs/components';
 import PinsItem from '../../components/pinsItem/index';
 
 import testImg from '../../public/images/test.jpeg';
@@ -25,22 +25,59 @@ class Pins extends Component {
         },
       ],
       active: 'all',
+      currPageNum: 1,
+      totlaNum: 0,
       pins_list: [
         {
           id: 1,
-          
+
         }
       ]
     };
   }
 
-  config = {
-    navigationBarTitleText: 'Pins'
+  componentDidMount() {
+    Taro.showLoading({
+      title: '加载中...'
+    })
+    const { currPageNum, active } = this.state;
+    Taro.request({
+      url: `http://localhost:5000/pins/list?job_type=${active}&nextPageNum=${currPageNum}`,
+    }).then(res => {
+      Taro.hideLoading()
+      console.log(res.data);
+      if (res.data.code === 200) {
+        this.setState({
+          loading: false,
+          pins_list: res.data.data.list,
+          totlaNum: res.data.data.total,
+          currPageNum: res.data.data.currentNum
+        });
+      }
+    })
   }
-  
+
+  config = {
+    navigationBarTitleText: '沸点板块'
+  }
+
+
   handleChangeType = (type) => {
     this.setState({
       active: type
+    });
+  }
+
+  handlePublishClick = () => {
+    Taro.navigateTo({
+      url: '/pages/pins_publish/index'
+    });
+  }
+
+  handleGoToDetail = (pins_id) => {
+    if(!pins_id) return;
+    Taro.navigateTo({
+      url: `/pages/pins_detail/index?pins_id=${pins_id}`,
     });
   }
 
@@ -57,8 +94,8 @@ class Pins extends Component {
           <View className='pins_wrapper_opts'>
             {
               opts.map(opt => (
-                <View 
-                  className={`pins_wrapper_opts_item ${opt.type === active ? 'active' : ''}}`} 
+                <View
+                  className={`pins_wrapper_opts_item ${opt.type === active ? 'active' : ''}}`}
                   key={opt.id}
                   onClick={() => this.handleChangeType(opt.type)}
                 >
@@ -73,12 +110,23 @@ class Pins extends Component {
           </View>
 
           <View className='pins_wrapper_opts_list'>
-            <PinsItem />
-            <PinsItem />
-            <PinsItem />
+            {
+              this.state.pins_list.map(pins => (
+                <PinsItem key={pins._id} {...pins}
+                  onGo={this.handleGoToDetail}
+                />
+              ))
+            }
           </View>
         </View>
-
+        <Button className='btn btn-pub'
+          onClick={this.handlePublishClick}
+          type='default'
+          plain='true'
+          size='mini'
+        >
+          发布
+          </Button>
       </View>
     )
   }

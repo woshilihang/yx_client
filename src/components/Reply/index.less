@@ -1,0 +1,73 @@
+.reply {
+  display: flex;
+  position: relative;
+  margin-bottom: 28px;
+  .reply_avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+  }
+  .reply_info {
+    flex: 1;
+    margin-left: 24px;
+    .reply_info_title {
+      color: #b2b2b2;
+      font-size: 26px;
+      height: 52px;
+      line-height: 52px;
+    }
+    .reply_info_content {
+      font-size: 24px;
+      line-height: 36px;
+      color: #333333;
+      .reply_other_list {
+        border-radius: 18px;
+        margin: 12px 0;
+        padding: 16px 28px 16px;
+        background-color: #ededed;
+        .reply_other_list_item {
+          font-size: 24px;
+          .reply_other_list_item_avatar {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 8px
+          }
+          .reply_other_list_item_text {
+            color: #b2b2b2;
+          }
+          .reply_other_list_item_say {
+            color: #333333;
+          }
+        }
+      }
+    }
+  }
+  .reply_feature {
+    font-size: 24px;
+    position: absolute;
+    right: 0;
+    top: 6px;
+    .reply_feature_txt {
+      position: relative;
+      display: inline-block;
+      color: #b2b2b2;
+      padding: 0 12px 0 42px;
+      height: 38px;
+      line-height: 38px;
+      margin-right: 12px;
+      &.prize::before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        content: '';
+        width: 38px;
+        height: 38px;
+        background: url('../../public/images/prize.png') no-repeat center center;
+        background-size: 38px 38px;
+      }
+    }
+  }
+}
