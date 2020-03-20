@@ -31,11 +31,11 @@ class App extends Component {
 
   config = {
     pages: [
+      'pages/pins/index',
       'pages/index/index',
       'pages/my_auth/index',
       'pages/pins_detail/index',
       'pages/offer/index',
-      'pages/pins/index',
       'pages/pins_publish/index',
       'pages/job_detail/index',
       'pages/publish/index',

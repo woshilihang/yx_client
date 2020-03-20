@@ -75,7 +75,13 @@ class Pins extends Component {
   }
 
   handleGoToDetail = (pins_id) => {
-    if(!pins_id) return;
+    console.log(1111, pins_id)
+    if(!pins_id) {
+      Taro.showToast({
+        title: '该沸点不存在ID'
+      })
+      return ;
+    };
     Taro.navigateTo({
       url: `/pages/pins_detail/index?pins_id=${pins_id}`,
     });

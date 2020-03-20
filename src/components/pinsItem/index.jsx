@@ -27,15 +27,17 @@ class PinsItem extends Component {
   // }
   getDomInfoStr = (desc, info) => {
     const imgStr = info.map(img => {
-      return `<img src="http://localhost:5000${img}" className='pins_item_info_img' />`;
+      return `<img src="http://localhost:5000${img}" style='width: 200px;
+      height: 250px;' />`;
     }).join('');
     let desc_info = replaceSpaceToBr(desc) + '<Br />';
     return '<p style="margin: 0px 0 16px;">' + desc_info + '</p>' + imgStr;
   }
 
   render() {
-    const { pins_id, pins_desc = '', pins_comment, pins_prize, pins_imgList, userInfo, onGo } = this.props;
+    const { _id: pins_id = '', pins_desc = '', pins_comment, pins_prize, pins_imgList, userInfo, onGo } = this.props;
     const { nickName, company, job_type, avatar } = userInfo;
+    console.log(this.props, 'this.props')
     let str = this.getDomInfoStr(pins_desc, pins_imgList);
     return (
       <View className='pins_item' onClick={() => onGo(pins_id)}>
