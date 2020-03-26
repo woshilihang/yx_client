@@ -19,12 +19,13 @@ class My extends Component {
           id: 1,
           text: '发布',
           iconPath: publish,
-          gotoUrl: `/pages/recordUpdate/index`
+          gotoUrl: `/pages/my_publish/index`
         },
         {
           id: 2,
           text: '已复制',
           iconPath: copy,
+          gotoUrl: `/pages/my_copy/index`
         },
         {
           id: 3,
@@ -62,11 +63,11 @@ class My extends Component {
       userInfo: {}
     }
   }
-  
+
   componentDidMount() {
     // TODO: 或者从redux里面取出数据
     const userInfo = Taro.getStorageSync('userInfo') || {};
-    if(Object.keys(userInfo).length) {
+    if (Object.keys(userInfo).length) {
       this.setState({
         userInfo
       })
@@ -78,9 +79,9 @@ class My extends Component {
   }
 
   handleOperClick = (url) => {
-    if(!url) return;
+    if (!url) return;
     Taro.navigateTo({
-      url: `/pages/publish/index?id=1`
+      url
     })
   }
 
@@ -90,14 +91,19 @@ class My extends Component {
     return (
       <View className='my'>
         <View className='header'>
+          {/* TODO: 增加一个垫底图片 */}
           <Image className='header_img' src={userInfo.avatarUrl} />
           <View className='header_content'>
             <View className='header_content-nickname'>
-              {userInfo.nickName}<Text className='icon'></Text>
+              {userInfo.nickName || '请登录'}<Text className='icon'></Text>
             </View>
-            <View className='header_content-school'>
-              { `${userInfo.province} - ${userInfo.city}` }
-              </View>
+            {
+              (userInfo.province || userInfo.city) && (
+                <View className='header_content-school'>
+                  {`${userInfo.province} - ${userInfo.city}`}
+                </View>
+              )
+            }
             <View className='header_content-edit'>
               编辑个人资料
               <Text> &gt; </Text>
@@ -110,7 +116,7 @@ class My extends Component {
           {
             this.state.oper_list.map(oper => (
               <View className='oper_item' key={oper.id}
-                onClick={oper.gotoUrl ? this.handleOperClick.bind(this, oper.gotoUrl): () => {}}
+                onClick={oper.gotoUrl ? this.handleOperClick.bind(this, oper.gotoUrl) : () => { }}
               >
                 <Image className='oper_icon' src={oper.iconPath} />
                 <Text className='oper_txt'>

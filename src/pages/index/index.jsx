@@ -13,6 +13,7 @@ import testImg from '../../public/images/test.jpeg'
 import JDItem from '../../components/JDItem/index'
 // import MyLoading from '../../components/Loading/index'
 import http from '../../utils/http';
+import { OPTS_JOB } from '../../constants';
 
 const defaultConfig = {
   search_txt: '搜索职位或公司名称',
@@ -101,43 +102,6 @@ class Index extends Component {
     jobs_list: [],
     jobTotalNum: 0,
     currPageNum: 1,
-    optsJobs_list: [
-      {
-        id: 1,
-        name: '全部',
-        job: 'all'
-      },
-      {
-        id: 2,
-        name: '运营',
-        job: 'business'
-      },
-      {
-        id: 3,
-        name: '技术',
-        job: 'skill'
-      },
-      {
-        id: 4,
-        name: '职能',
-        job: 'operate'
-      },
-      {
-        id: 5,
-        name: '市场',
-        job: 'market'
-      },
-      {
-        id: 6,
-        name: '设计',
-        job: 'design'
-      },
-      {
-        id: 7,
-        name: '金融',
-        job: 'finance'
-      },
-    ],
     active: 'all', // 当前作用于哪一个Job
     loading: true, // 是否显示loading
     canShare: true, // 是否允许分享
@@ -211,9 +175,9 @@ class Index extends Component {
   }
 
   handleOptsJobClick = (optsJob) => {
-    const { job } = optsJob;
+    const { lang } = optsJob;
     this.setState({
-      active: job,
+      active: lang,
       loading: true,
       currPageNum: 1,
     }, () => {
@@ -244,9 +208,9 @@ class Index extends Component {
     console.log('去发布 触发身份验证');
     await http.get('/user/msg').then(res => {
       // console.log('/user/msg res ---', res);
-      if (res && res.code === 200) {
+      if (res) {
         this.setState({
-          isConfirmPublish: res.data.isConfirm
+          isConfirmPublish: res.isConfirm
         }, () => {
           Taro.navigateTo({
             url: this.state.isConfirmPublish ? '/pages/publish/index' : '/pages/my_auth/index',
@@ -430,8 +394,8 @@ class Index extends Component {
             {/* 模块岗位划分 */}
             <View className='opts_jobs_list'>
               {
-                this.state.optsJobs_list.map(optsJob => (
-                  <View className={`opts_job_item ${active === optsJob.job ? 'actived' : ''}`} key={optsJob.id}
+                OPTS_JOB.map(optsJob => (
+                  <View className={`opts_job_item ${active === optsJob.lang ? 'actived' : ''}`} key={optsJob.lang}
                     onClick={() => this.handleOptsJobClick(optsJob)}
                   >
                     <Text>

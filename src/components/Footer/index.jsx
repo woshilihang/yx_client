@@ -6,6 +6,7 @@ import './index.less'
 import collect from '../../public/images/collect.png'
 import share from '../../public/images/share.png'
 import post from '../../public/images/post.png'
+import { publishUserCopy } from '../../client';
 
 
 const JOB_DETAIL_ICON = {
@@ -16,13 +17,44 @@ const JOB_DETAIL_ICON = {
 
 class MyFooter extends Component {
   static defaultProps = {
-    from: 'JOB_DETAIL'
+    from: 'JOB_DETAIL',
+    email: '',
+    content_id: ''
+  }
+  handleCopyEvt(copy_val, content_id) {
+    if(!content_id) {
+      Taro.showToast({
+        title: '复制失败，缺少ID',
+        icon: 'success'
+      })
+      return void 0;
+    }
+    Taro.setClipboardData({
+      data: copy_val,
+      success: function () {
+        Taro.getClipboardData({
+          success: async function (res){
+            let content = `复制邮箱成功: ${res.data}`
+            console.log(content, 'contentcontent')
+            // TODO: 记录一个请求 /user/publishCopy
+            await publishUserCopy({
+              copy_val,
+              content_id
+            })
+            Taro.showToast({
+              title: '已复制',
+              icon: 'success'
+            })
+          }
+        })
+      }
+    })
   }
 
   render() {
-    const { from } = this.props;
+    const { from, content_id, email } = this.props;
     let tpl;
-    if(from === 'JOB_DETAIL') {
+    if (from === 'JOB_DETAIL') {
       tpl = (
         <View className='footer_container'>
           <View className='footer_container_opts'>
@@ -39,7 +71,10 @@ class MyFooter extends Component {
               <Text className='footer_container_opts_item_txt'>海报</Text>
             </View>
           </View>
-          <Button className='footer_container_btn' type='default' plain='true' size='mini'>复制投递邮箱</Button>
+          <Button onClick={
+            this.handleCopyEvt.bind(this, email, content_id)
+          }
+            className='footer_container_btn' type='default' plain='true' size='mini'>复制投递邮箱</Button>
         </View>
       )
     } else {

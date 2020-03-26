@@ -49,7 +49,7 @@ async function http({ url = '', reqData = {}, method = 'POST' } = {}) {
   return new Promise(resolve => {
     if (res.statusCode === 200) {
       if (res.data.code === 200) {
-        resolve(res.data);
+        resolve(res.data.data);
       } else {
         Taro.showModal({
           title: '出错了',
@@ -70,6 +70,7 @@ async function http({ url = '', reqData = {}, method = 'POST' } = {}) {
 
 export default {
   get: (url, data = {}) => {
+    console.log('request-get ---', url)
     return http({
       url,
       reqData: data,
@@ -78,6 +79,7 @@ export default {
   },
 
   post: (url, data = {}) => {
+    console.log('request-post ---', url)
     return http({
       url,
       reqData: data,

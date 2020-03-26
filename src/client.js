@@ -12,4 +12,10 @@ export const fetchJobDetail = (job_id) => http.get('/job/detail', {
   }
 });
 
-// 
+// 我的
+export const fetchUserPublish = async () => http.get('/user/publish');
+
+export const publishUserCopy = async params => http.post('/user/publishCopy', params);
+
+// /user/getCopyList
+export const fetchUserCopy = async () => http.get('/user/getCopyList');

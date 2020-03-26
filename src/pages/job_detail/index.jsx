@@ -1,12 +1,13 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image, Text, RichText } from '@tarojs/components';
+import { View, Image, Text, RichText, Canvas, Button } from '@tarojs/components';
 import { connect } from '@tarojs/redux'
 
 import MyFooter from '../../components/Footer/index'
 import { initAppAuth } from '../../actions/init'
 
 import './index.less'
-import { replaceSpaceToBr } from '../../utils/common';
+import { replaceSpaceToBr, transLangToName, saveCard, drawImage } from '../../utils/common';
+import { OPTS_CITY, OPTS_JOB } from '../../constants';
 
 @connect(({ init, }) => ({ init }), (dispatch) => ({
   onInitAppAuth(payload) {
@@ -32,7 +33,7 @@ class Job_Detail extends Component {
   componentDidMount() {
     console.log(this.props.init, 'init app detail')
     console.log(this.$router)
-    const { jobId = '5e57860b39d80785d14ed389' } = this.$router.params;
+    const { jobId = '5e74ceb55f28640daa7ebd9e' } = this.$router.params;
 
     Taro.request({
       url: 'http://localhost:5000/job/detail',
@@ -42,6 +43,7 @@ class Job_Detail extends Component {
       success: (res) => {
         console.log(res);
         if (res.data.code === 200) {
+          console.log('岗位详情数据res.data.data ---', res.data.data)
           const {
             job_type,
             job_city,
@@ -50,7 +52,8 @@ class Job_Detail extends Component {
             job_desc,
             job_isOffical,
             job_company,
-            job_name
+            job_name,
+            job_id,
           } = res.data.data;
           this.setState({
             job_type,
@@ -60,7 +63,8 @@ class Job_Detail extends Component {
             job_desc,
             job_isOffical,
             job_company,
-            job_name
+            job_name,
+            job_id
           });
         }
       },
@@ -86,7 +90,9 @@ class Job_Detail extends Component {
       job_desc,
       job_isOffical,
       job_company,
-      job_name } = this.state;
+      job_id,
+      job_name
+    } = this.state;
     console.log(this.state.job_isOffical, '转正')
     return (
       <View className='job_detail'>
@@ -103,12 +109,26 @@ class Job_Detail extends Component {
               {job_company.companyName}
             </View>
             <View className='job_detail_msg'>
-              <Text className='location'>{job_city.join('、')}</Text>
-              <Text className='jobs'>{job_type}</Text>
+              <Text className='location'
+                onClick={drawImage}
+              >{transLangToName(OPTS_CITY, job_city).join('、')}</Text>
+              <Text className='jobs'>{transLangToName(OPTS_JOB, job_type)}</Text>
               <Text className='origin'>{job_origin}</Text>
             </View>
           </View>
-
+          {
+            11 &&
+            <View className='canvas-wrap'>
+              <Canvas
+                id='card-canvas'
+                className='card-canvas'
+                style='width: 320px; height: 450px'
+                canvasId='cardCanvas'
+              >
+              </Canvas>
+              <Button onClick={saveCard} className='btn-save' type='primary' size='mini'>保存到相册</Button>
+            </View>
+          }
           <View className='job_detail_flag'>
             <View className='msg'>
               <Text className='msg_label'>公司名称</Text>
@@ -161,7 +181,9 @@ class Job_Detail extends Component {
             }
           </View>
         </View>
-        <MyFooter />
+        <MyFooter email={job_email}
+          content_id={job_id}
+        />
       </View>
     )
   }

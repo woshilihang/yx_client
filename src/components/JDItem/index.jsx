@@ -2,6 +2,8 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
 
 import './index.less'
+import { transLangToName } from '../../utils/common';
+import { OPTS_JOB, OPTS_CITY } from '../../constants';
 // import exampleImg from '../../public/images/mi.png'
 
 class JDItem extends Component {
@@ -29,8 +31,8 @@ class JDItem extends Component {
             <Text className='origin'>{job_origin}</Text>
           </View>
           <View className='jd_item_content_detail jl'>
-            <Text className='jobs'>{job_type}</Text>
-            <Text className='location'>{job_city.join('、')}</Text>
+            <Text className='jobs'>{transLangToName(OPTS_JOB ,job_type)}</Text>
+            <Text className='location'>{transLangToName(OPTS_CITY ,job_city).join('、')}</Text>
           </View>
         </View>
       </View>
