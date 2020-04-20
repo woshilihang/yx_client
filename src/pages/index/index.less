@@ -1,11 +1,19 @@
+
 .txcenter {
   font-size: 28px;
   padding: 20px;
   text-align:center;
 }
-.index {
+.content {
   padding: 0 36px;
   flex-direction: column;
+  // overflow:auto;
+  // margin:auto;
+  // position:absolute;
+  // top:0;
+  // bottom:0;
+  // left:0;
+  // right:0;
   .header {
     display: flex;
     flex-direction: row;
@@ -27,6 +35,10 @@
         height: 52px;
         padding: 4px 0 4px 58px;
         box-sizing: border-box;
+        color: #333333;
+        font-weight: 300;
+        font-size: 28px;
+
         &::before{
           content: '';
           position: absolute;
@@ -92,6 +104,14 @@
   .jd_item_list {
     margin-top: 28px;
   }
+  .no_data {
+    margin: 16px 0;
+    text-align: center;
+    .no_data_txt {
+      color: #b2b2b2;
+      font-size: 28px;
+    }
+  }
   .btn-pub {
     position: fixed;
     bottom: 40px;
@@ -104,5 +124,38 @@
     width: 158px;
     height: 68px;
     font-size: 30px;
+  }
+}
+
+.downDragBox{
+  width: 100%;
+  top: 0px;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  position: absolute;
+  z-index: 1000;
+  .downText{
+    margin-left: 20px;
+    // color: #b2b2b2;
+    color: #333333;
+    font-size: 28px;
+  }
+}
+.upDragBox{
+  bottom: 0px;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  position: absolute;
+  .dragUpdata{
+    height: 100%;
+    width: 100%;
+    position: absolute;
   }
 }

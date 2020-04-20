@@ -19,7 +19,7 @@ export const fetchUserInfo = async () => http.get('/user/info');
 // 按照模块分类处理
 // 内推信息专区模块接口
 // 查询内推列表
-export const fetchJobList = async url => http.get(url);
+export const fetchJobList = async params => http.get('/job/list', params);
 // 查询内推详情
 export const fetchJobDetail = params => http.get('/job/detail', params);
 // 发布内推信息

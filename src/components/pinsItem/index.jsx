@@ -9,9 +9,9 @@ import { fetchPinsPrize } from '../../client';
 class PinsItem extends Component {
 
   static defaultProps = {
-    nickName: '王维嘉',
-    companyName: '京东',
-    job: '推荐策略',
+    nickName: '',
+    companyName: '',
+    job: '',
     pins_desc: '',
     pins_prize_num: [],
     pins_comment: 0,
@@ -21,13 +21,6 @@ class PinsItem extends Component {
     pins_prize_self: false, // 用户是否已经点赞了该评论
   }
 
-  // renderDomInfo = (info) => {
-  //   let domInfo = info.map(img => (
-  //     <Image src={img} className='pins_item_info_img' key={img} />
-  //   ));
-  //   console.log(domInfo);
-
-  // }
   getDomInfoStr = (desc, info) => {
     const imgStr = info.map(img => {
       return `<img src="${rootUrl}/${img}" style='width: 200px;

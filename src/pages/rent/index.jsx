@@ -20,8 +20,8 @@ class Rent extends Component {
 
   //分享
 	onShareAppMessage(){
-		return{
-			title : 'this page shareMessage'
+		return {
+			title : '友享社区，解决你的校园&职前问题！！'
 		}
 	}
 

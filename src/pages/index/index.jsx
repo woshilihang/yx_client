@@ -1,14 +1,21 @@
+/* eslint-disable import/first */
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Input, Image, Button, ScrollView } from '@tarojs/components'
+import { AtActivityIndicator } from 'taro-ui'
 import { connect } from '@tarojs/redux'
 
 import { initAppAuth } from '../../actions/init'
 import AuthModal from '../../components/Modal';
 import pageInit from '../../components/pageInit';
 
+import 'taro-ui/dist/style/components/activity-indicator.scss'
+import 'taro-ui/dist/style/components/loading.scss';
+
 import './index.less'
+
 import msgIcon from '../../public/images/msg.png'
-import testImg from '../../public/images/test.jpeg'
+// import testImg from '../../public/images/test.jpeg'
+
 
 import JDItem from '../../components/JDItem/index'
 // import MyLoading from '../../components/Loading/index'
@@ -26,6 +33,7 @@ const mapState = ({ init }) => ({
   hasInit: init.hasInit
 });
 
+const pageNum = 8; // 每页多少条数据
 
 @connect(mapState, (dispatch) => ({
   onInitAppAuth() {
@@ -45,6 +53,7 @@ class Index extends Component {
     isInitShow: true, // 控制是否显示
     userInfo: {},
     isConfirmPublish: false, // 用户身份是否已认证发布内推信息权限
+    isFinished: false, // 内推职位信息分页数据加载完成
     banner: [
       {
         image_src: 'https://uploadfiles.nowcoder.com/images/20200402/999991356_1585799795866_28DE56E2E0E633977DE098EED7B10848'
@@ -61,11 +70,32 @@ class Index extends Component {
       // {
       //   image_src: 'https://uploadfiles.nowcoder.com/images/20200402/733846638_1585833797877_5DB44111675E6F96443F48553097FEEF'
       // }
-    ]
+    ],
+
+    // 下拉刷新相关
+    dargStyle: {//下拉框的样式
+      top: 0 + 'px'
+    },
+    downDragStyle: {//下拉图标的样式
+      height: 0 + 'px'
+    },
+    downText: '下拉刷新',
+    upDragStyle: {//上拉图标样式
+      height: 0 + 'px'
+    },
+    pullText: '上拉加载更多',
+    start_p: {},
+    scrollY: true,
+    dargState: 0//刷新状态 0不做操作 1刷新 -1加载更多
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log(this.props, nextProps)
+  }
 
-  async componentDidMount() {
+  componentWillUnmount() { }
+
+  async componentDidShow() {
     console.log('loading -- ', this.state.loading);
     console.log(this.props.init);
 
@@ -75,12 +105,6 @@ class Index extends Component {
     await this.fetchJobListHandle()
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
-  }
-
-  componentWillUnmount() { }
-
   componentDidHide() { }
 
   config = {
@@ -89,7 +113,7 @@ class Index extends Component {
   //分享
   onShareAppMessage() {
     return {
-      title: 'this page shareMessage'
+      title: '友享社区，解决你的校园&职前问题！！'
     }
   }
 
@@ -102,16 +126,35 @@ class Index extends Component {
     })
   }
 
+  handleConfirmInput = (evt) => {
+    console.log(evt, '---')
+    // const val = evt.detail.value;
+    // TODO: 关键字搜索
+    this.setState({
+      loading: true,
+      currPageNum: 1,
+      isFinished: false,
+    }, async () => {
+      await this.fetchJobListHandle()
+    });
+  }
+
   fetchJobListHandle = async () => {
-    const { active, currPageNum } = this.state;
-    let res = await fetchJobList(`/job/list?job_type=${active}&nextPageNum=${currPageNum}`);
+    const { active, currPageNum, search_val='' } = this.state;
+    // /job/list?job_type=${active}&nextPageNum=${currPageNum}&keyword=${search_val}
+    let res = await fetchJobList({
+      job_type: active,
+      nextPageNum: currPageNum,
+      keyword: search_val
+    });
     const { list, total, currentNum } = res;
     Taro.hideLoading();
     this.setState({
       loading: false,
-      jobs_list: list,
+      jobs_list: currPageNum > 1 ? this.state.jobs_list.concat(list) : list,
       jobTotalNum: total,
-      currPageNum: currentNum
+      currPageNum: currentNum,
+      isFinished: list.length >= pageNum ? false : true
     });
   }
 
@@ -123,6 +166,7 @@ class Index extends Component {
       active: lang,
       loading: true,
       currPageNum: 1,
+      isFinished: false,
     }, async () => {
       await this.fetchJobListHandle()
     });
@@ -148,55 +192,36 @@ class Index extends Component {
 
   }
 
-  updateList = async () => {
+  updateList = () => {
     console.log('触发了下拉刷新。。。')
     if (this.state.loading) return
+    Taro.showLoading({
+      title: '加载中'
+    })
     this.setState({
       loading: true,
       currPageNum: 1,
       total: 0,
+      isFinished: false,
+      jobs_list: [],
+    }, async () => {
+      // 重新刷新数据
+      await this.fetchJobListHandle()
     })
-    Taro.showLoading({
-      title: '加载中'
-    })
-    // 重新刷新数据
-    await this.fetchJobListHandle()
   }
 
   appendNextPageList = () => {
-    console.log('触发了上拉加载。。。')
-    if (this.state.loading) return
+    console.log('触发了上拉加载。。。', this.state.loading, this.state.isFinished)
+    if (this.state.loading || this.state.isFinished) return
     Taro.showLoading({
       title: '加载中'
     })
     this.setState({
       loading: true,
-      currPageNum: this.state.currPageNum + 1
+      currPageNum: Number(this.state.currPageNum) + 1
     }, async () => {
       await this.fetchJobListHandle()
     })
-    // setTimeout(() => {
-    //   let jobData = Array.from({ length: 10 }, () => {
-    //     return serverData[Math.floor(Math.random() * 7)]
-    //   });
-    //   this.setState({
-    //     jobs_list: this.state.jobs_list.concat(jobData),
-    //     loading: false
-    //   });
-    //   Taro.hideLoading()
-    // }, 1000);
-    // 获取下一页数据
-    // Taro.request({
-    //   url: ''
-    // }).then(res => {
-    //   Taro.hideLoading()
-    //   if(res.data.success) {
-    //     this.setState({
-    //       jobs_list: this.state.jobs_list.concat(res.data.data),
-    //       loading: false
-    //     });
-    //   }
-    // })
   }
 
   goToJobDetailPage = (id) => {
@@ -272,10 +297,129 @@ class Index extends Component {
     })
   }
 
+  down() {//下拉
+    console.log('下拉')
+    this.updateList()
+  }
+
+  touchStart(evt) {
+    this.setState({
+      start_p: evt.touches[0]
+    })
+  }
+  touchEnd() {
+    if (this.state.dargState === 1) {
+      this.down()
+    } else if (this.state.dargState === -1) {
+      // 上拉加载操作
+      // this.pull()
+    }
+    this.reduction()
+  }
+
+  pull() {
+    console.log('上拉')
+    this.appendNextPageList()
+  }
+
+  reduction() {//还原初始设置
+    const time = 0.5;
+    this.setState({
+      upDragStyle: {//上拉图标样式
+        height: 0 + 'px',
+        transition: `all ${time}s`
+      },
+      dargState: 0,
+      dargStyle: {
+        top: 0 + 'px',
+        transition: `all ${time}s`
+      },
+      downDragStyle: {
+        height: 0 + 'px',
+        transition: `all ${time}s`
+      },
+      scrollY: true
+    })
+    setTimeout(() => {
+      this.setState({
+        dargStyle: {
+          top: 0 + 'px',
+        },
+        upDragStyle: {//上拉图标样式
+          height: 0 + 'px'
+        },
+        pullText: '上拉加载更多',
+        downText: '下拉刷新'
+      })
+    }, time * 1000);
+  }
+
+  touchmove(e) {
+    let move_p = e.touches[0],//移动时的位置
+      deviationX = 0.30,//左右偏移量(超过这个偏移量不执行下拉操作)
+      deviationY = 70,//拉动长度（低于这个值的时候不执行）
+      maxY = 100;//拉动的最大高度
+
+    let start_x = this.state.start_p.clientX,
+      start_y = this.state.start_p.clientY,
+      move_x = move_p.clientX,
+      move_y = move_p.clientY;
+
+
+    //得到偏移数值
+    let dev = Math.abs(move_x - start_x) / Math.abs(move_y - start_y);
+    if (dev < deviationX) {//当偏移数值大于设置的偏移数值时则不执行操作
+      let pY = Math.abs(move_y - start_y) / 3.5;//拖动倍率（使拖动的时候有粘滞的感觉--试了很多次 这个倍率刚好）
+      if (move_y - start_y > 0) {//下拉操作
+        if (pY >= deviationY) {
+          this.setState({ dargState: 1, downText: '释放刷新' })
+        } else {
+          this.setState({ dargState: 0, downText: '下拉刷新' })
+        }
+        if (pY >= maxY) {
+          pY = maxY
+        }
+        this.setState({
+          dargStyle: {
+            top: pY + 'px',
+          },
+          downDragStyle: {
+            height: pY + 'px'
+          },
+          scrollY: false//拖动的时候禁用
+        })
+      }
+      if (start_y - move_y > 0) {//上拉操作
+        console.log('上拉操作')
+        if (pY >= deviationY) {
+          this.setState({ dargState: -1, pullText: '释放加载更多' })
+        } else {
+          this.setState({ dargState: 0, pullText: '上拉加载更多' })
+        }
+        if (pY >= maxY) {
+          pY = maxY
+        }
+        this.setState({
+          dargStyle: {
+            top: -pY + 'px',
+          },
+          upDragStyle: {
+            height: pY + 'px'
+          },
+          scrollY: false//拖动的时候禁用
+        })
+      }
+
+    }
+  }
+
   render() {
-    const { active, isInitShow, banner } = this.state;
+    const { active, isInitShow, banner, isFinished } = this.state;
+    let dargStyle = this.state.dargStyle;
+    let downDragStyle = this.state.downDragStyle;
+    // let upDragStyle = this.state.upDragStyle;
     return (
-      <View>
+      <View className='index'>
         {
           (isInitShow && !this.props.hasInit) && (<AuthModal
             title='授权提示'
@@ -285,27 +429,43 @@ class Index extends Component {
             isAuth='true'
           />)
         }
+        <View className='downDragBox' style={downDragStyle}>
+          <AtActivityIndicator size={32} color='#333'></AtActivityIndicator>
+          <Text className='downText'>{this.state.downText}</Text>
+        </View>
         <ScrollView
-          className='jd_lists'
+          className='jd_lists dragUpdata'
           scrollY
           scrollWithAnimation
           scrollTop='0'
-          lowerThreshold='10'
-          upperThreshold='0'
-          onScrolltoupper={this.updateList}
+          // upperThreshold='10'
+          // onScrolltoupper={this.updateList}
+          lowerThreshold='40'
           onScrolltolower={this.appendNextPageList}
           style={{
-            height: '750px'
+            ...dargStyle,
+            height: '100vh',
           }}
+          onTouchStart={this.touchStart.bind(this)}
+          onTouchMove={this.touchmove.bind(this)}
+          onTouchEnd={this.touchEnd.bind(this)}
         >
-          <View className='index'>
+          <View className='content'>
             {/* <MyLoading visible={this.state.loading} /> */}
             <View className='header'>
               <View className='header_address'>
                 <Text onClick={this.handleChangeInitState}>全国</Text>
               </View>
               <View className='header_search'>
-                <Input placeholderClass='header_search_input-placeholder' className='header_search_input' onInput={this.handleSearchInput} placeholder={defaultConfig.search_txt} value={this.state.search_val} />
+                <Input
+                  focus
+                  placeholderClass='header_search_input-placeholder' 
+                  className='header_search_input' confirm-type='search'  
+                  onInput={this.handleSearchInput}
+                  onConfirm={this.handleConfirmInput}
+                  placeholder={defaultConfig.search_txt} 
+                  value={this.state.search_val}
+                />
               </View>
               <Image className='header_msg' src={msgIcon} />
             </View>
@@ -313,8 +473,7 @@ class Index extends Component {
             {/* banner广告区域 */}
             <View className='banner'>
               {/* <Image className='banner_img' src={testImg} /> */}
-              <MySwiper banner={banner}
-              />
+              <MySwiper banner={banner} />
             </View>
 
             {/* 模块岗位划分 */}
@@ -347,6 +506,13 @@ class Index extends Component {
               }
             </View>
 
+            {/* 没有更多了 */}
+            {
+              isFinished && <View className='no_data'>
+                <Text className='no_data_txt'>没有更多了...</Text>
+              </View>
+            }
+
             <Button className='btn btn-pub'
               onClick={this.handlePublishClick}
               type='default'
@@ -357,6 +523,10 @@ class Index extends Component {
           </Button>
           </View>
         </ScrollView>
+        {/* <View className='upDragBox' style={upDragStyle}>
+          <AtActivityIndicator size={32} color='#333'></AtActivityIndicator>
+          <Text className='downText'>{this.state.downText}</Text>
+        </View> */}
       </View>
     )
   }
