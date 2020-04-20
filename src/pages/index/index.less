@@ -7,21 +7,25 @@
 .content {
   padding: 0 36px;
   flex-direction: column;
-  // overflow:auto;
-  // margin:auto;
-  // position:absolute;
-  // top:0;
-  // bottom:0;
-  // left:0;
-  // right:0;
   .header {
     display: flex;
     flex-direction: row;
     height: 80px;
-    // justify-content: center;
     align-items: center;
     .header_address {
+      position: relative;
       color: #333333;
+      width: 95px;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        right: -8px;
+        width: 42px;
+        height: 42px;
+        background: url('../../public/images/bottom_arrow.png') no-repeat center center;
+        background-size: 42px 42px;
+      }
     }
     .header_search {
       flex: 1;
@@ -157,5 +161,13 @@
     height: 100%;
     width: 100%;
     position: absolute;
+  }
+}
+
+
+.self_atactionsheet {
+  border-radius: 20px;
+  .at-action-sheet__container {
+    border-radius: 20px 20px 0 0;
   }
 }

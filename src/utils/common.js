@@ -73,6 +73,7 @@ export const transLangToName = (keyMap, langList) => {
     })
     return nameList.concat(langList)
   }
+  return ''
 }
 
 /**

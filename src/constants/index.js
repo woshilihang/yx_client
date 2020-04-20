@@ -1,6 +1,11 @@
 // 省份城市 中英文映射表
 export const OPTS_CITY = [
   {
+    id: 0,
+    name: '全国',
+    lang: '', // 空字符串默认为全国
+  },
+  {
     id: 1,
     name: '北京',
     lang: 'beijing'
@@ -9,22 +14,21 @@ export const OPTS_CITY = [
     id: 2,
     name: '上海',
     lang: 'shanghai'
-  }, {
+  },
+  {
     id: 3,
     name: '广州',
     lang: 'guangzhou'
-  }, {
+  }, 
+  {
     id: 4,
     name: '深圳',
     lang: 'shenzhen'
-  }, {
+  }, 
+  {
     id: 5,
     name: '杭州',
     lang: 'hangzhou'
-  }, {
-    id: 6,
-    name: '其他',
-    lang: 'qita'
   },
 ]
 

@@ -1,7 +1,7 @@
 /* eslint-disable import/first */
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Input, Image, Button, ScrollView } from '@tarojs/components'
-import { AtActivityIndicator } from 'taro-ui'
+import { AtActivityIndicator, AtActionSheet, AtActionSheetItem } from 'taro-ui'
 import { connect } from '@tarojs/redux'
 
 import { initAppAuth } from '../../actions/init'
@@ -10,6 +10,7 @@ import pageInit from '../../components/pageInit';
 
 import 'taro-ui/dist/style/components/activity-indicator.scss'
 import 'taro-ui/dist/style/components/loading.scss';
+import "taro-ui/dist/style/components/action-sheet.scss";
 
 import './index.less'
 
@@ -20,10 +21,11 @@ import msgIcon from '../../public/images/msg.png'
 import JDItem from '../../components/JDItem/index'
 // import MyLoading from '../../components/Loading/index'
 import http from '../../utils/http';
-import { OPTS_JOB } from '../../constants';
+import { OPTS_JOB, OPTS_CITY } from '../../constants';
 import { fetchJobList } from '../../client';
 import { rootUrl } from '../../config';
 import MySwiper from '../../components/MySwiper';
+import { transLangToName } from '../../utils/common'
 
 const defaultConfig = {
   search_txt: '搜索职位或公司名称',
@@ -54,6 +56,7 @@ class Index extends Component {
     userInfo: {},
     isConfirmPublish: false, // 用户身份是否已认证发布内推信息权限
     isFinished: false, // 内推职位信息分页数据加载完成
+    isOpened: false,
     banner: [
       {
         image_src: 'https://uploadfiles.nowcoder.com/images/20200402/999991356_1585799795866_28DE56E2E0E633977DE098EED7B10848'
@@ -86,7 +89,7 @@ class Index extends Component {
     pullText: '上拉加载更多',
     start_p: {},
     scrollY: true,
-    dargState: 0//刷新状态 0不做操作 1刷新 -1加载更多
+    dargState: 0, //刷新状态 0不做操作 1刷新 -1加载更多
   }
 
   componentWillReceiveProps(nextProps) {
@@ -140,12 +143,14 @@ class Index extends Component {
   }
 
   fetchJobListHandle = async () => {
-    const { active, currPageNum, search_val='' } = this.state;
+    const { active, currPageNum, search_val = '' } = this.state;
+    let city = Taro.getStorageSync('curr_city');
     // /job/list?job_type=${active}&nextPageNum=${currPageNum}&keyword=${search_val}
     let res = await fetchJobList({
       job_type: active,
       nextPageNum: currPageNum,
-      keyword: search_val
+      keyword: search_val,
+      city
     });
     const { list, total, currentNum } = res;
     Taro.hideLoading();
@@ -172,8 +177,10 @@ class Index extends Component {
     });
   }
 
-  handleChangeInitState = () => {
-    this.props.onInitAppAuth();
+  handleChangeCityClick = () => {
+    this.setState({
+      isOpened: true
+    })
   }
 
   handlePublishClick = async () => {
@@ -413,8 +420,26 @@ class Index extends Component {
     }
   }
 
+  handleCancel = () => {
+    this.setState({
+      isOpened: false
+    })
+  }
+
+  handleAtActionSheetClick = (city) => {
+    Taro.setStorageSync('curr_city', city)
+    this.setState({
+      loading: true,
+      currPageNum: 1,
+      isFinished: false,
+      isOpened: false
+    }, async () => {
+      await this.fetchJobListHandle()
+    });
+  }
+
   render() {
-    const { active, isInitShow, banner, isFinished } = this.state;
+    const { active, isInitShow, banner, isFinished, isOpened } = this.state;
     let dargStyle = this.state.dargStyle;
     let downDragStyle = this.state.downDragStyle;
     // let upDragStyle = this.state.upDragStyle;
@@ -433,6 +458,18 @@ class Index extends Component {
           <AtActivityIndicator size={32} color='#333'></AtActivityIndicator>
           <Text className='downText'>{this.state.downText}</Text>
         </View>
+        <AtActionSheet className='self_atactionsheet' isOpened={isOpened}
+          cancelText='取消'
+          onCancel={this.handleCancel}
+        >
+          {
+            OPTS_CITY.map(city => (
+              <AtActionSheetItem onClick={this.handleAtActionSheetClick.bind(this, city.lang)} key={city.id}>
+                {city.name}
+              </AtActionSheetItem>
+            ))
+          }
+        </AtActionSheet>
         <ScrollView
           className='jd_lists dragUpdata'
           scrollY
@@ -454,16 +491,18 @@ class Index extends Component {
             {/* <MyLoading visible={this.state.loading} /> */}
             <View className='header'>
               <View className='header_address'>
-                <Text onClick={this.handleChangeInitState}>全国</Text>
+                <Text onClick={this.handleChangeCityClick}>{
+                  transLangToName(OPTS_CITY, Taro.getStorageSync('curr_city')) || '全国'
+                }</Text>
               </View>
               <View className='header_search'>
                 <Input
                   focus
-                  placeholderClass='header_search_input-placeholder' 
-                  className='header_search_input' confirm-type='search'  
+                  placeholderClass='header_search_input-placeholder'
+                  className='header_search_input' confirm-type='search'
                   onInput={this.handleSearchInput}
                   onConfirm={this.handleConfirmInput}
-                  placeholder={defaultConfig.search_txt} 
+                  placeholder={defaultConfig.search_txt}
                   value={this.state.search_val}
                 />
               </View>

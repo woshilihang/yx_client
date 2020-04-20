@@ -25,7 +25,7 @@ class MyFooter extends Component {
     if(!content_id) {
       Taro.showToast({
         title: '复制失败，缺少ID',
-        icon: 'success'
+        icon: 'none'
       })
       return void 0;
     }
@@ -41,10 +41,10 @@ class MyFooter extends Component {
               copy_val,
               content_id
             })
-            Taro.showToast({
-              title: '已复制',
-              icon: 'success'
-            })
+            // Taro.showToast({
+            //   title: '已复制',
+            //   icon: 'success'
+            // })
           }
         })
       }
