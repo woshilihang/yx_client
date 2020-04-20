@@ -6,6 +6,7 @@ import testImg from '../../public/images/test.jpeg';
 // import '../../public/styles/common.less';
 // common样式不起作用
 import './index.less';
+import { fetchPinsList } from '../../client';
 
 
 class Pins extends Component {
@@ -36,26 +37,26 @@ class Pins extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     Taro.showLoading({
       title: '加载中...'
     })
-    const { currPageNum, active } = this.state;
-    Taro.request({
-      url: `http://localhost:5000/pins/list?job_type=${active}&nextPageNum=${currPageNum}`,
-    }).then(res => {
-      Taro.hideLoading()
-      console.log(res.data);
-      if (res.data.code === 200) {
-        this.setState({
-          loading: false,
-          pins_list: res.data.data.list,
-          totlaNum: res.data.data.total,
-          currPageNum: res.data.data.currentNum
-        });
-      }
-    })
+    await this.fetchPinsListHandle()
   }
+
+  fetchPinsListHandle = async () => {
+    const { active, currPageNum } = this.state;
+    let res = await fetchPinsList(`/pins/list?job_type=${active}&nextPageNum=${currPageNum}`);
+    const { list, total, currentNum } = res;
+    Taro.hideLoading();
+    this.setState({
+      loading: false,
+      jobs_list: list,
+      jobTotalNum: total,
+      currPageNum: currentNum
+    });
+  }
+
 
   config = {
     navigationBarTitleText: '沸点板块'
@@ -76,11 +77,11 @@ class Pins extends Component {
 
   handleGoToDetail = (pins_id) => {
     console.log(1111, pins_id)
-    if(!pins_id) {
+    if (!pins_id) {
       Taro.showToast({
         title: '该沸点不存在ID'
       })
-      return ;
+      return;
     };
     Taro.navigateTo({
       url: `/pages/pins_detail/index?pins_id=${pins_id}`,

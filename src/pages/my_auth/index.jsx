@@ -6,6 +6,7 @@ import './index.less'
 import jobImg from '../../public/images/job_show.png';
 import { rootUrl } from '../../config';
 import http from '../../utils/http';
+import { fetchUserInfo } from '../../client';
 
 class MyAuth extends Component {
   constructor() {
@@ -19,10 +20,25 @@ class MyAuth extends Component {
       job_img: '',
     }
   }
+  async componentDidMount() {
+    // TODO: 先查询获取用户的基本信息
+    const { userInfo = {} } = await fetchUserInfo();
+    console.log(userInfo, 'userInfo')
+    const { username, gender, wx, company, job_type, job_img } = userInfo;
+    this.setState({
+      username,
+      gender,
+      wx,
+      company,
+      job_type,
+      job_img
+    })
+  }
 
   config = {
     navigationBarTitleText: '岗位发布认证'
   }
+
 
   handleInputMsg = (name, evt) => {
     this.setState({
@@ -77,11 +93,19 @@ class MyAuth extends Component {
       job_img
     };
     console.log('[params] ---', params);
+    if(!company || !job_img) {
+      Taro.showToast({
+        title: '公司名称或工作证不能为空',
+        icon: 'none',
+        duration: 1000
+      });
+      return;
+    }
     http.post('/user/update', params).then(res => {
-      // console.log(res, 'res');
-      if (res && res.code === 200) {
+      console.log(res, 'res');
+      if (res) {
         Taro.navigateTo({
-          url: '/pages/publish/index',
+          url: `/pages/publish/index?companyName=${company}`,
         });
       }
     })
@@ -97,6 +121,7 @@ class MyAuth extends Component {
 
   render() {
     console.log(this.state.job_img, 'this.state.job_img');
+    const { username, gender, wx, company, job_type, job_img } = this.state;
     return (
       <View className='my_auth'>
         <View className='my_auth_title'>招聘前需内推</View>
@@ -108,6 +133,7 @@ class MyAuth extends Component {
               placeholderClass='my_auth_container_item_input-placeholder'
               className='my_auth_container_item_input'
               onInput={this.handleInputMsg.bind(this, 'username')}
+              value={username}
             // placeholder='请输入内容'
             />
           </View>
@@ -117,6 +143,7 @@ class MyAuth extends Component {
               placeholderClass='my_auth_container_item_input-placeholder'
               className='my_auth_container_item_input'
               onInput={this.handleInputMsg.bind(this, 'gender')}
+              value={gender}
             />
           </View>
           <View className='my_auth_container_item'>
@@ -125,6 +152,7 @@ class MyAuth extends Component {
               placeholderClass='my_auth_container_item_input-placeholder'
               className='my_auth_container_item_input'
               onInput={this.handleInputMsg.bind(this, 'wx')}
+              value={wx}
             />
           </View>
           <View className='my_auth_container_item'>
@@ -133,6 +161,7 @@ class MyAuth extends Component {
               placeholderClass='my_auth_container_item_input-placeholder'
               className='my_auth_container_item_input'
               onInput={this.handleInputMsg.bind(this, 'company')}
+              value={company}
             />
           </View>
           <View className='my_auth_container_item'>
@@ -140,6 +169,7 @@ class MyAuth extends Component {
             <Input className='my_auth_container_item_input'
               onInput={this.handleInputMsg.bind(this, 'job_type')}
               placeholderClass='my_auth_container_item_input-placeholder'
+              value={job_type}
             />
           </View>
           <View className='my_auth_container_item area'>

@@ -3,6 +3,7 @@ import { View, Image, Text, RichText } from '@tarojs/components';
 import { replaceSpaceToBr } from '../../utils/common';
 
 import './index.less'
+import { rootUrl } from '../../config';
 
 class PinsItem extends Component {
 
@@ -27,7 +28,7 @@ class PinsItem extends Component {
   // }
   getDomInfoStr = (desc, info) => {
     const imgStr = info.map(img => {
-      return `<img src="http://localhost:5000${img}" style='width: 200px;
+      return `<img src="${rootUrl}/${img}" style='width: 200px;
       height: 250px;' />`;
     }).join('');
     let desc_info = replaceSpaceToBr(desc) + '<Br />';

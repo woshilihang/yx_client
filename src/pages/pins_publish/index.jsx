@@ -2,9 +2,10 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Textarea, Button, Text, Image } from '@tarojs/components';
 
-import { MaxPinsUploadImg } from '../../config/index';
+import { MaxPinsUploadImg, rootUrl } from '../../config/index';
 import '../../public/styles/common.less';
 import './index.less';
+import { fetchPinsPublish } from '../../client';
 
 class PinsPublish extends Component {
   constructor() {
@@ -20,43 +21,24 @@ class PinsPublish extends Component {
     navigationBarTitleText: '沸点发布'
   }
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { pins_desc, tempFiles } = this.state;
     const pins_imgList = tempFiles.map(file => file.imgUrl);
     const params = {
       pins_desc,
       pins_imgList
     };
-    console.log('沸点发布提交参数 ---, ', params);
-    Taro.request({
-      url: 'http://localhost:5000/pins/publish',
-      data: JSON.stringify(params),
-      method: 'POST',
-      header: {
-        authorization: 'Bearer ' + Taro.getStorageSync('TOKEN'),
-        ContentType: 'application/json',
-      },
-      success: res => {
-        console.log(res, 'res 发布');
-        const data = res.data;
-        Taro.showModal({
-          title: '发布成功',
-          content: data.message,
-          success: function() {
-            Taro.navigateTo({
-              url: '/pages/pins/index',
-            });
-          }
-        });
-      },
-      fail: err => {
-        console.log(err, 'err');
-        Taro.showModal({
-          title: '提示',
-          content: '沸点发布失败'
+    const res = await fetchPinsPublish(params);
+    console.log('沸点发布提交res ---, ', res);
+    Taro.showModal({
+      title: '发布成功',
+      content: res.message,
+      success: function() {
+        Taro.navigateTo({
+          url: '/pages/pins/index',
         });
       }
-    })
+    });
   }
 
   handleUploadImg = () => {
@@ -99,7 +81,7 @@ class PinsPublish extends Component {
   uploadImgSingle = (file) => {
     return new Promise((resolve, reject) => {
       Taro.uploadFile({
-        url: 'http://localhost:5000/pins/upload',
+        url: `${rootUrl}/pins/upload`,
         filePath: file.path,
         name: 'file',
         formData: {

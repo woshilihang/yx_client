@@ -3,6 +3,7 @@
   "projectname": "myApp",
   "description": "my project",
   "appid": "wxafc415b4df0faa5b",
+  "appidBack": "wxf69986470ca8008d",
   "setting": {
     "urlCheck": true,
     "es6": false,

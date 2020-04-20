@@ -1,5 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Button } from '@tarojs/components';
+import { rootUrl } from '../../config';
 
 class Test extends Component {
 
@@ -21,7 +22,7 @@ class Test extends Component {
       Taro.login({
         success: loginRes => {
           Taro.request({
-            url: 'http://localhost:5000/user/login',
+            url: `${rootUrl}/user/login`,
             data: {
               code: loginRes.code,
               encryptedData:  userRes.encryptedData,
@@ -50,7 +51,7 @@ class Test extends Component {
 
   getLoginInfo = () => {
     Taro.request({
-      url: 'http://localhost:5000/home/test',
+      url: `${rootUrl}/home/test`,
       header: {
         authorization: 'Bearer' + Taro.getStorageInfoSync('TOKEN'),
       },
@@ -76,7 +77,7 @@ class Test extends Component {
   }
   handleValidate = () => {
     Taro.request({
-      url: 'http://localhost:5000/user/test',
+      url: `${rootUrl}/user/test`,
       method: 'POST',
       data: {},
       header: {

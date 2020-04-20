@@ -14,76 +14,12 @@ import JDItem from '../../components/JDItem/index'
 // import MyLoading from '../../components/Loading/index'
 import http from '../../utils/http';
 import { OPTS_JOB } from '../../constants';
+import { fetchJobList } from '../../client';
+import { rootUrl } from '../../config';
 
 const defaultConfig = {
   search_txt: '搜索职位或公司名称',
 }
-
-const serverData = [
-  {
-    id: 1,
-    title: '出海电商增长运营实习生',
-    company: '小米',
-    origin: '内推',
-    jobs: '运营',
-    address: '北京',
-    img: 'https://uploadfiles.nowcoder.com/images/20180918/4107856_1537253829973_FE8E552D9F284C2F083267D8EC135526'
-  },
-  {
-    id: 2,
-    title: '前端开发实习生',
-    company: '腾讯',
-    origin: '内推',
-    jobs: '运营',
-    address: '北京',
-    img: 'https://uploadfiles.nowcoder.com/files/20190715/9398821_1563179722928_120.png'
-  },
-  {
-    id: 3,
-    title: 'JAVA开发工程师',
-    company: '阿里',
-    origin: '内推',
-    jobs: '运营',
-    address: '北京',
-    img: 'https://uploadfiles.nowcoder.com/images/20180917/4107856_1537180998772_EA0EB791BBE9BECA5981335580CD0F58'
-  },
-  {
-    id: 4,
-    title: '产品与运营实习生',
-    company: '字节跳动',
-    origin: '内推',
-    jobs: '运营',
-    address: '北京',
-    img: 'https://uploadfiles.nowcoder.com/files/20191129/4107856_1575019780091_60x60.png'
-  },
-  {
-    id: 5,
-    title: '大数据分析实习生',
-    company: '百度',
-    origin: '内推',
-    jobs: '运营',
-    address: '北京',
-    img: 'https://uploadfiles.nowcoder.com/images/20180917/4107856_1537181125149_471D6CEB9F3691513D7B5CE2545E1818'
-  },
-  {
-    id: 6,
-    title: '商业产品经理',
-    company: '美团',
-    origin: 'HR发布',
-    jobs: '产品',
-    address: '北京',
-    img: 'https://uploadfiles.nowcoder.com/files/20190629/4107856_1561788901920_120x120.png'
-  },
-  {
-    id: 7,
-    title: '数据分析师',
-    company: '京东',
-    origin: 'HR发布',
-    jobs: '职能',
-    address: '北京',
-    img: 'https://uploadfiles.nowcoder.com/images/20180917/4107856_1537181614088_15ADCE1EF9544F27FFAF92B10CF15BF5'
-  },
-];
 
 const mapState = ({ init }) => ({
   hasInit: init.hasInit
@@ -111,40 +47,14 @@ class Index extends Component {
   }
 
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log('loading -- ', this.state.loading);
     console.log(this.props.init);
 
     Taro.showLoading({
       title: '加载中...'
     })
-    // setTimeout(() => {
-    //   let jobData = Array.from({ length: 10 }, () => {
-    //     return serverData[Math.floor(Math.random() * 7)]
-    //   });
-    //   console.log(jobData, 'jobData');
-    //   this.setState({
-    //     jobs_list: jobData,
-    //     loading: false
-    //   });
-    //   Taro.hideLoading()
-    // }, 1000);
-    // 做初始化获数据
-    const { currPageNum, active } = this.state;
-    Taro.request({
-      url: `http://localhost:5000/job/list?job_type=${active}&nextPageNum=${currPageNum}`,
-    }).then(res => {
-      Taro.hideLoading()
-      console.log(res.data);
-      if (res.data.code === 200) {
-        this.setState({
-          loading: false,
-          jobs_list: res.data.data.list,
-          jobTotalNum: res.data.data.total,
-          currPageNum: res.data.data.currentNum
-        });
-      }
-    });
+    await this.fetchJobListHandle()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -174,29 +84,29 @@ class Index extends Component {
     })
   }
 
+  fetchJobListHandle = async () => {
+    const { active, currPageNum } = this.state;
+      let res = await fetchJobList(`/job/list?job_type=${active}&nextPageNum=${currPageNum}`);
+      const { list, total, currentNum } = res;
+      Taro.hideLoading();
+      this.setState({
+        loading: false,
+        jobs_list: list,
+        jobTotalNum: total,
+        currPageNum: currentNum
+      });
+  }
+
   handleOptsJobClick = (optsJob) => {
     const { lang } = optsJob;
+    // 点击自身不重新请求
+    if(lang === this.state.active) return
     this.setState({
       active: lang,
       loading: true,
       currPageNum: 1,
-    }, () => {
-      // 调用接口
-      const { active, currPageNum } = this.state;
-      Taro.request({
-        url: `http://localhost:5000/job/list?job_type=${active}&nextPageNum=${currPageNum}`,
-      }).then(res => {
-        Taro.hideLoading()
-        console.log(res.data);
-        if (res.data.code === 200) {
-          this.setState({
-            loading: false,
-            jobs_list: res.data.data.list,
-            jobTotalNum: res.data.data.total,
-            currPageNum: res.data.data.currentNum
-          });
-        }
-      })
+    }, async () => {
+      await this.fetchJobListHandle()
     });
   }
 
@@ -205,15 +115,14 @@ class Index extends Component {
   }
 
   handlePublishClick = async () => {
-    console.log('去发布 触发身份验证');
+    // console.log('去发布 触发身份验证');
     await http.get('/user/msg').then(res => {
-      // console.log('/user/msg res ---', res);
       if (res) {
         this.setState({
           isConfirmPublish: res.isConfirm
         }, () => {
           Taro.navigateTo({
-            url: this.state.isConfirmPublish ? '/pages/publish/index' : '/pages/my_auth/index',
+            url: this.state.isConfirmPublish ? `/pages/publish/index?companyName=${res.company}` : '/pages/my_auth/index',
           });
         });
       }
@@ -221,7 +130,7 @@ class Index extends Component {
 
   }
 
-  updateList = () => {
+  updateList = async () => {
     console.log('触发了下拉刷新。。。')
     if (this.state.loading) return
     this.setState({
@@ -233,42 +142,31 @@ class Index extends Component {
       title: '加载中'
     })
     // 重新刷新数据
-    const { currPageNum, active } = this.state;
-    Taro.request({
-      url: `http://localhost:5000/job/list?job_type=${active}&nextPageNum=${currPageNum}`,
-    }).then(res => {
-      Taro.hideLoading()
-      console.log(res.data);
-      if (res.data.code === 200) {
-        this.setState({
-          loading: false,
-          jobs_list: res.data.data.list,
-          jobTotalNum: res.data.data.total,
-          currPageNum: res.data.data.currentNum
-        });
-      }
-    })
+    await this.fetchJobListHandle()
   }
 
   appendNextPageList = () => {
     console.log('触发了上拉加载。。。')
     if (this.state.loading) return
-    this.setState({
-      loading: true
-    })
     Taro.showLoading({
       title: '加载中'
     })
-    setTimeout(() => {
-      let jobData = Array.from({ length: 10 }, () => {
-        return serverData[Math.floor(Math.random() * 7)]
-      });
-      this.setState({
-        jobs_list: this.state.jobs_list.concat(jobData),
-        loading: false
-      });
-      Taro.hideLoading()
-    }, 1000);
+    this.setState({
+      loading: true,
+      currPageNum: this.state.currPageNum + 1
+    }, async () => {
+      await this.fetchJobListHandle()
+    })
+    // setTimeout(() => {
+    //   let jobData = Array.from({ length: 10 }, () => {
+    //     return serverData[Math.floor(Math.random() * 7)]
+    //   });
+    //   this.setState({
+    //     jobs_list: this.state.jobs_list.concat(jobData),
+    //     loading: false
+    //   });
+    //   Taro.hideLoading()
+    // }, 1000);
     // 获取下一页数据
     // Taro.request({
     //   url: ''
@@ -297,14 +195,11 @@ class Index extends Component {
     const { userInfo = '', encryptedData, iv } = userData;
     console.log('userdata ---', userData);
     if (userInfo) {
-      // Taro.setStorageSync('userInfo', userInfo);
-      // Taro.setStorageSync('hasInit', true);
-      // this.props.onInitAppAuth(true);
       // 用户数据入库
       Taro.login({
         success: loginRes => {
           Taro.request({
-            url: 'http://localhost:5000/user/login',
+            url: `${rootUrl}/user/login`,
             data: {
               code: loginRes.code,
               encryptedData,
@@ -313,7 +208,8 @@ class Index extends Component {
             },
             success: (res) => {
               // TODO: 未被正确执行
-              console.log('成功了 --')
+              console.log('hahah -- code', loginRes.code)
+              console.log('成功了 --', res, res.data)
               const { data } = res;
               Taro.showModal({
                 title: '登录成功',
@@ -411,7 +307,7 @@ class Index extends Component {
             {/* 列表 */}
             <View className='jd_item_list'>
               {
-                this.state.jobs_list.map(job_item => (
+                this.state.jobs_list.length && this.state.jobs_list.map(job_item => (
                   <JDItem
                     key={job_item.id}
                     {...job_item}

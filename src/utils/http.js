@@ -30,7 +30,7 @@ async function http({ url = '', reqData = {}, method = 'POST' } = {}) {
     url = `${url}${urlStr}`;
     data = {};
   } else {
-    data = Object.assign({}, defData, reqData);
+    data = JSON.stringify(Object.assign({}, defData, reqData));
   }
 
   // header 'Bearer ' + Taro.getStorageSync('TOKEN')

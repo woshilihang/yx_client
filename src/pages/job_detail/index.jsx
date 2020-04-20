@@ -1,13 +1,14 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image, Text, RichText, Canvas, Button } from '@tarojs/components';
+import { View, Image, Text, RichText, } from '@tarojs/components';
 import { connect } from '@tarojs/redux'
 
 import MyFooter from '../../components/Footer/index'
 import { initAppAuth } from '../../actions/init'
 
 import './index.less'
-import { replaceSpaceToBr, transLangToName, saveCard, drawImage } from '../../utils/common';
+import { replaceSpaceToBr, transLangToName, drawImage } from '../../utils/common';
 import { OPTS_CITY, OPTS_JOB } from '../../constants';
+import { fetchJobDetail } from '../../client';
 
 @connect(({ init, }) => ({ init }), (dispatch) => ({
   onInitAppAuth(payload) {
@@ -30,52 +31,36 @@ class Job_Detail extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log(this.props.init, 'init app detail')
+  async componentDidMount() {
     console.log(this.$router)
     const { jobId = '5e74ceb55f28640daa7ebd9e' } = this.$router.params;
 
-    Taro.request({
-      url: 'http://localhost:5000/job/detail',
-      data: {
-        job_id: jobId
-      },
-      success: (res) => {
-        console.log(res);
-        if (res.data.code === 200) {
-          console.log('岗位详情数据res.data.data ---', res.data.data)
-          const {
-            job_type,
-            job_city,
-            job_email,
-            job_origin,
-            job_desc,
-            job_isOffical,
-            job_company,
-            job_name,
-            job_id,
-          } = res.data.data;
-          this.setState({
-            job_type,
-            job_city,
-            job_email,
-            job_origin,
-            job_desc,
-            job_isOffical,
-            job_company,
-            job_name,
-            job_id
-          });
-        }
-      },
-      fail: (err) => {
-        console.log(err);
-        Taro.showModal({
-          title: '获取信息数据失败',
-          content: '请稍后重试'
-        });
-      }
-    })
+    const res = await fetchJobDetail({
+      job_id: jobId
+    });
+    console.log('岗位详情数据res ---', res)
+    const {
+      job_type,
+      job_city,
+      job_email,
+      job_origin,
+      job_desc,
+      job_isOffical,
+      job_company,
+      job_name,
+      job_id,
+    } = res;
+    this.setState({
+      job_type,
+      job_city,
+      job_email,
+      job_origin,
+      job_desc,
+      job_isOffical,
+      job_company,
+      job_name,
+      job_id
+    });
   }
 
   config = {
@@ -93,7 +78,6 @@ class Job_Detail extends Component {
       job_id,
       job_name
     } = this.state;
-    console.log(this.state.job_isOffical, '转正')
     return (
       <View className='job_detail'>
         <View className='job_detail_wrapper'>
@@ -116,19 +100,6 @@ class Job_Detail extends Component {
               <Text className='origin'>{job_origin}</Text>
             </View>
           </View>
-          {
-            11 &&
-            <View className='canvas-wrap'>
-              <Canvas
-                id='card-canvas'
-                className='card-canvas'
-                style='width: 320px; height: 450px'
-                canvasId='cardCanvas'
-              >
-              </Canvas>
-              <Button onClick={saveCard} className='btn-save' type='primary' size='mini'>保存到相册</Button>
-            </View>
-          }
           <View className='job_detail_flag'>
             <View className='msg'>
               <Text className='msg_label'>公司名称</Text>
@@ -136,7 +107,7 @@ class Job_Detail extends Component {
             </View>
             <View className='msg'>
               <Text className='msg_label'>公司口号</Text>
-              <Text className='msg_txt'>{job_company.moto}</Text>
+              <Text className='msg_txt'>{job_company.keyword}</Text>
             </View>
           </View>
 
@@ -163,9 +134,9 @@ class Job_Detail extends Component {
             </View>
             <View className='job_detail_preview_title'>
               工作城市
-          </View>
+            </View>
             <View className='job_detail_preview_content'>
-              {job_city.join('、')}
+              {transLangToName(OPTS_CITY, job_city).join('、')}
             </View>
             {
               job_isOffical && (

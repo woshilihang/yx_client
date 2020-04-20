@@ -6,6 +6,7 @@ import { OPTS_CITY, OPTS_ORIGIN } from '../../constants';
 import '../../public/styles/common.less'
 import './index.less'
 import { getSimpleIsBelone, isNullObj, removeOfArr } from '../../utils/common';
+import { fetchJobpublish } from '../../client';
 
 const optsJobs_list = [
   {
@@ -95,9 +96,10 @@ class Publish extends Component {
     });
   }
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     // textarea里面的换行符需要保留
     // TODO: this.state.job_desc.replace(/[\r\n]/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, ' ');
+    const { companyName } = this.$router.params;
     const { job_isOffical, job_type, job_city, job_origin, job_email, job_desc, job_name } = this.state;
     const params = {
       job_type: job_type.job,
@@ -106,7 +108,8 @@ class Publish extends Component {
       job_email,
       job_origin: job_origin.name,
       job_desc,
-      job_isOffical
+      job_isOffical,
+      job_company: companyName
     };
     console.log(params);
 
@@ -127,39 +130,33 @@ class Publish extends Component {
       return ;
     }
 
-
-    console.log('Bearer ' + Taro.getStorageSync('TOKEN'), 'haha')
-    Taro.request({
-      method: 'POST',
-      url: 'http://localhost:5000/job/publish',
-      header: {
-        authorization: 'Bearer ' + Taro.getStorageSync('TOKEN'),
-      },
-      data: JSON.stringify(params),
-      success: (res) => {
-        if(res.data && res.data.code === 200) {
-          Taro.switchTab({
-            url: '/pages/index/index',
-          })
-        }
-      },
-      fail: (err) => {
-        console.log(err);
-      }
+    const res = await fetchJobpublish(params);
+    console.log('发布内推信息res ---', res);
+    Taro.switchTab({
+      url: '/pages/index/index',
     });
-    console.log('zhixing')
   }
 
   render() {
     const { job_isOffical, job_type, job_city, job_origin, job_email, job_desc, job_name } = this.state;
+    const { companyName } = this.$router.params;
     console.log(this.state.job_desc.replace(/[\r\n]/g, '<br/>'), 'jobdesc');
+    console.log(this.$router)
     return (
       <View className='publish'>
         <View className='publish_title'>
           <Text className='publish_title_company'>
-            滴滴出行
+            {companyName}
           </Text>
-          <Text className='publish_reconfirm'>
+          <Text className='publish_reconfirm'
+            onClick={
+             () => {
+              Taro.navigateTo({
+                url: `/pages/my_auth/index`
+              })
+             }
+            }
+          >
             重新认证 &gt;&gt;&gt;
           </Text>
         </View>
