@@ -16,6 +16,7 @@ import http from '../../utils/http';
 import { OPTS_JOB } from '../../constants';
 import { fetchJobList } from '../../client';
 import { rootUrl } from '../../config';
+import MySwiper from '../../components/MySwiper';
 
 const defaultConfig = {
   search_txt: '搜索职位或公司名称',
@@ -44,6 +45,23 @@ class Index extends Component {
     isInitShow: true, // 控制是否显示
     userInfo: {},
     isConfirmPublish: false, // 用户身份是否已认证发布内推信息权限
+    banner: [
+      {
+        image_src: 'https://uploadfiles.nowcoder.com/images/20200402/999991356_1585799795866_28DE56E2E0E633977DE098EED7B10848'
+      },
+      {
+        image_src: 'https://uploadfiles.nowcoder.com/images/20191115/999991356_1573798849904_2D17C168A3C204ACB9D89CA6B517DB73',
+      },
+      // {
+      //   image_src: 'https://uploadfiles.nowcoder.com/images/20200402/733846638_1585833849926_1E6EE0263D6B633F536FB40A12C74CF9',
+      // },
+      // {
+      //   image_src: 'https://uploadfiles.nowcoder.com/images/20200402/733846638_1585833817713_18D66393E9DABAC4FD8D11982652CAA1',
+      // },
+      // {
+      //   image_src: 'https://uploadfiles.nowcoder.com/images/20200402/733846638_1585833797877_5DB44111675E6F96443F48553097FEEF'
+      // }
+    ]
   }
 
 
@@ -255,7 +273,7 @@ class Index extends Component {
   }
 
   render() {
-    const { active, isInitShow } = this.state;
+    const { active, isInitShow, banner } = this.state;
     return (
       <View>
         {
@@ -294,7 +312,9 @@ class Index extends Component {
 
             {/* banner广告区域 */}
             <View className='banner'>
-              <Image className='banner_img' src={testImg} />
+              {/* <Image className='banner_img' src={testImg} /> */}
+              <MySwiper banner={banner}
+              />
             </View>
 
             {/* 模块岗位划分 */}
