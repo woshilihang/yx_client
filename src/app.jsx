@@ -47,6 +47,7 @@ class App extends Component {
       'pages/rent/index',
       'pages/my_publish/index',
       'pages/my_copy/index',
+      'pages/my_info/index',
       'pages/recordUpdate/index',
       'pages/resume/index'
     ],

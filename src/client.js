@@ -16,6 +16,8 @@ export const fetchUserCopy = async () => http.get('/user/getCopyList');
 
 export const fetchUserInfo = async () => http.get('/user/info');
 
+export const updateUserInfo = async params => http.post('/user/update', params);
+
 // 按照模块分类处理
 // 内推信息专区模块接口
 // 查询内推列表

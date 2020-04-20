@@ -104,7 +104,9 @@ class My extends Component {
                 </View>
               )
             }
-            <View className='header_content-edit'>
+            <View className='header_content-edit'
+              onClick={() => Taro.navigateTo({url: '/pages/my_info/index'})}
+            >
               编辑个人资料
               <Text> &gt; </Text>
             </View>
