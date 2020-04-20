@@ -86,21 +86,21 @@ class Index extends Component {
 
   fetchJobListHandle = async () => {
     const { active, currPageNum } = this.state;
-      let res = await fetchJobList(`/job/list?job_type=${active}&nextPageNum=${currPageNum}`);
-      const { list, total, currentNum } = res;
-      Taro.hideLoading();
-      this.setState({
-        loading: false,
-        jobs_list: list,
-        jobTotalNum: total,
-        currPageNum: currentNum
-      });
+    let res = await fetchJobList(`/job/list?job_type=${active}&nextPageNum=${currPageNum}`);
+    const { list, total, currentNum } = res;
+    Taro.hideLoading();
+    this.setState({
+      loading: false,
+      jobs_list: list,
+      jobTotalNum: total,
+      currPageNum: currentNum
+    });
   }
 
   handleOptsJobClick = (optsJob) => {
     const { lang } = optsJob;
     // 点击自身不重新请求
-    if(lang === this.state.active) return
+    if (lang === this.state.active) return
     this.setState({
       active: lang,
       loading: true,
@@ -211,18 +211,28 @@ class Index extends Component {
               console.log('hahah -- code', loginRes.code)
               console.log('成功了 --', res, res.data)
               const { data } = res;
-              Taro.showModal({
-                title: '登录成功',
-                content: data.message
-              });
-              Taro.setStorageSync('TOKEN', data.Token);
-              // Taro.$globalData.userInfo = userRes.userInfo;
-              this.setState({
-                userInfo
-              });
-              Taro.setStorageSync('userInfo', userInfo);
-              Taro.setStorageSync('hasInit', true);
-              this.props.onInitAppAuth(true);
+              // TODO: 存在一个与此问题类似的情况 https://developers.weixin.qq.com/community/develop/doc/82ca869278af0322c43063a475660921?_at=1575951158725
+              if (data.Token) {
+                Taro.showModal({
+                  title: '登录成功',
+                  content: data.message
+                });
+                Taro.setStorageSync('TOKEN', data.Token);
+                // Taro.$globalData.userInfo = userRes.userInfo;
+                this.setState({
+                  userInfo
+                });
+                Taro.setStorageSync('userInfo', userInfo);
+                Taro.setStorageSync('hasInit', true);
+                this.props.onInitAppAuth(true);
+              } else {
+                console.log('授权失败');
+                Taro.showModal({
+                  title: '授权失败',
+                  content: '请重新登录'
+                });
+              }
+
             },
             fail: (err) => {
               console.log('授权失败', err);

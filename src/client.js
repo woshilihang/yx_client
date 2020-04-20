@@ -30,3 +30,9 @@ export const fetchJobpublish = params => http.post('/job/publish', params)
 export const fetchPinsList = async url => http.get(url);
 
 export const fetchPinsPublish = params => http.post('/pins/publish', params)
+
+// 沸点详情
+export const fetchPinsDetail = params => http.get('/pins/detail', params)
+
+// 沸点点赞
+export const fetchPinsPrize = params => http.post('/pins/prize', params)

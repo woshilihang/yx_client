@@ -60,7 +60,7 @@ function pageInit() {
         if(shareOptions ) return shareOptions;
         // 默认分享
         return {
-          title: '默认分享内容'
+          title: '点击查看更多内推沸点租房信息吧！！'
         }
       }
 

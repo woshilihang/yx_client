@@ -247,3 +247,19 @@ comments: [
 待解决的问题
 
 textarea 字数限制
+
+
+/pins/prize 
+
+{
+	"pins_id": "5e9d0b2ffea8a8443d79e529"
+}
+
+{
+    "code": 200,
+    "message": "取消点赞",
+    "data": {
+        "hasPrize": false,
+        "hasPrizeTxt": "取消点赞"
+    }
+}

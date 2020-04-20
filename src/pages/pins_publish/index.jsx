@@ -30,9 +30,8 @@ class PinsPublish extends Component {
     };
     const res = await fetchPinsPublish(params);
     console.log('沸点发布提交res ---, ', res);
-    Taro.showModal({
+    Taro.showToast({
       title: '发布成功',
-      content: res.message,
       success: function() {
         Taro.navigateTo({
           url: '/pages/pins/index',

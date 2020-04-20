@@ -4,9 +4,8 @@ import PinsItem from '../../components/pinsItem/index';
 import Comment from '../../components/Comment/index';
 import Reply from '../../components/Reply/index';
 
-import { rootUrl } from '../../config/index';
-
 import './index.less'
+import { fetchPinsDetail } from '../../client';
 
 class PinsDetail extends Component {
 
@@ -14,39 +13,28 @@ class PinsDetail extends Component {
     super(...arguments);
     this.state = {
       detailInfo: {},
-      commentList: [{
-        id: '1',
-        pins_comment: '我是一条留言'
-      }]
+      commentList: []
     }
   }
 
-  componentDidMount() {
-    const { pins_id = '5e61140103ea2446632d0977' } = this.$router.params;
-    console.log('pins_id', pins_id);
-    const url = `${rootUrl}/pins/detail?pins_id=${pins_id}`;
-    console.log(url)
-    Taro.request({
-      url: `${rootUrl}/pins/detail?pins_id=${pins_id}`,
-      method: 'GET',
-      header: {
-        authorization: 'Bearer ' + Taro.getStorageSync('TOKEN'),
-      },
-      success: res => {
-        console.log(res, 'res')
-        if (res.data && res.data.code === 200) {
-          this.setState({
-            detailInfo: res.data.data
-          });
-        }
-      }
+  async componentDidMount() {
+    await this.fetchPinsDetailData()
+  }
+
+  fetchPinsDetailData = async () => {
+    const { pins_id } = this.$router.params;
+    const res = await fetchPinsDetail({
+      pins_id
+    });
+    console.log('沸点详情接口返回res ---', res)
+    this.setState({
+      detailInfo: res
     })
   }
 
   config = {
     navigationBarTitleText: '沸点详情'
   }
-
 
   render() {
     const { detailInfo } = this.state;
@@ -55,7 +43,9 @@ class PinsDetail extends Component {
     return (
       <View className='pins_detail'>
         <View className='pins_detail_wrapper'>
-          <PinsItem {...detailInfo} />
+          <PinsItem {...detailInfo} onReFetchData={this.fetchPinsDetailData}
+            origin='pins_detail'
+          />
           <View className='pins_detail_comments'>
             <View className='pins_detail_title'>
               留言 · {this.state.commentList.length}

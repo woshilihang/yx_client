@@ -3,6 +3,9 @@ import { View, Image, Text } from '@tarojs/components';
 
 import './index.less'
 
+import OfferImg from '../../public/images/offer.png';
+import RentImg from '../../public/images/rent.png';
+
 class Home extends Component {
 
   config = {
@@ -12,10 +15,10 @@ class Home extends Component {
   render() {
     return (
       <View className='home'>
-        <View className='home_preview' onClick={
+        {/* <View className='home_preview' onClick={
           () => {
             Taro.navigateTo({
-              url: '/pages/resume/index'
+              url: '/pages/pins/index'
             })
           }
         }
@@ -29,7 +32,7 @@ class Home extends Component {
               6780 评论
             </Text>
           </View>
-        </View>
+        </View> */}
 
         <View className='home_preview' onClick={
           () => {
@@ -39,7 +42,7 @@ class Home extends Component {
           }
         }
         >
-          <Image className='home_preview_img' />
+          <Image className='home_preview_img' src={OfferImg} />
           <View className='home_preview_content'>
             <Text className='home_preview_content_txt'>
               565 职言
@@ -58,7 +61,7 @@ class Home extends Component {
           }
         }
         >
-          <Image className='home_preview_img' />
+          <Image className='home_preview_img' src={RentImg} />
           <View className='home_preview_content'>
             <Text className='home_preview_content_txt'>
               3176 出租

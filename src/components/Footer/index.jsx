@@ -62,10 +62,10 @@ class MyFooter extends Component {
               <Image className='footer_container_opts_item_icon' src={JOB_DETAIL_ICON.collect} />
               <Text className='footer_container_opts_item_txt'>收藏</Text>
             </View>
-            <View className='footer_container_opts_item'>
+            <Button className='footer_container_opts_item omit_btn_sty' openType='share' >
               <Image className='footer_container_opts_item_icon' src={JOB_DETAIL_ICON.share} />
               <Text className='footer_container_opts_item_txt'>分享</Text>
-            </View>
+            </Button>
             <View className='footer_container_opts_item'>
               <Image className='footer_container_opts_item_icon' src={JOB_DETAIL_ICON.post} />
               <Text className='footer_container_opts_item_txt'>海报</Text>

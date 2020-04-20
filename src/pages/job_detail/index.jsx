@@ -1,9 +1,10 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Image, Text, RichText, } from '@tarojs/components';
-import { connect } from '@tarojs/redux'
+import { connect } from '@tarojs/redux';
 
-import MyFooter from '../../components/Footer/index'
-import { initAppAuth } from '../../actions/init'
+import MyFooter from '../../components/Footer/index';
+import pageInit from '../../components/pageInit';
+import { initAppAuth } from '../../actions/init';
 
 import './index.less'
 import { replaceSpaceToBr, transLangToName, drawImage } from '../../utils/common';
@@ -15,11 +16,13 @@ import { fetchJobDetail } from '../../client';
     dispatch(initAppAuth(payload))
   }
 }))
+@pageInit()
 class Job_Detail extends Component {
 
   constructor() {
     super(...arguments);
     this.state = {
+      canShare: true,
       job_type: '',
       job_city: [],
       job_email: '',
@@ -30,6 +33,7 @@ class Job_Detail extends Component {
       job_name: '',
     };
   }
+  
 
   async componentDidMount() {
     console.log(this.$router)
@@ -65,6 +69,23 @@ class Job_Detail extends Component {
 
   config = {
     navigationBarTitleText: '职位详情'
+  }
+
+  //分享
+  onShareAppMessage() {
+    const { job_company = {}, job_id } = this.state;
+    return {
+      title: `急招！${job_company.companyName || '公司'}在友享社区招聘实习，点击速看！！`,
+      path: `/pages/job_detail/index?jobId=${job_id}&isShare=true`,
+      // imgUrl: '', // 自定义转发的图片
+      success: function(res) {
+        console.log(res, 'res --- onshareAppmESSAGE')
+        Taro.showToast({
+          title: '转发成功',
+          icon: 'none'
+        });
+      }
+    }
   }
 
   render() {

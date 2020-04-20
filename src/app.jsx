@@ -32,11 +32,11 @@ class App extends Component {
   config = {
     pages: [
       'pages/index/index',
+      'pages/pins/index',
       'pages/demo/index',
       'pages/job_detail/index',
       'pages/my/index',
       'pages/pins_detail/index',
-      'pages/pins/index',
       'pages/my_auth/index',
       'pages/offer/index',
       'pages/pins_publish/index',

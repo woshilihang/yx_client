@@ -29,15 +29,16 @@ class Pins extends Component {
       currPageNum: 1,
       totlaNum: 0,
       pins_list: [
-        {
-          id: 1,
-
-        }
       ]
     };
   }
 
   async componentDidMount() {
+    console.log('沸点数据加载中....')
+  }
+
+  async componentDidShow() {
+    console.log('componentDidShow....')
     Taro.showLoading({
       title: '加载中...'
     })
@@ -51,8 +52,8 @@ class Pins extends Component {
     Taro.hideLoading();
     this.setState({
       loading: false,
-      jobs_list: list,
-      jobTotalNum: total,
+      pins_list: list,
+      totlaNum: total,
       currPageNum: currentNum
     });
   }
@@ -75,11 +76,13 @@ class Pins extends Component {
     });
   }
 
-  handleGoToDetail = (pins_id) => {
+  handleGoToDetail(evt, pins_id) {
     console.log(1111, pins_id)
+    evt.stopPropagation()
     if (!pins_id) {
       Taro.showToast({
-        title: '该沸点不存在ID'
+        title: '该沸点不存在ID',
+        icon: 'none'
       })
       return;
     };
@@ -88,8 +91,28 @@ class Pins extends Component {
     });
   }
 
+  handleReFetchData(id, num) {
+    // 根据ID值去改变对应的点赞的数量以及状态
+    const { pins_list }  = this.state
+    let newPinsListData = []
+    for(let i = 0, len = pins_list.length; i < len; i++) {
+      if(pins_list[i]._id === id) {
+        newPinsListData.push({
+          ...pins_list[i],
+          pins_prize_self: !pins_list[i].pins_prize_self,
+          pins_prize_num: num
+        });
+      } else {
+        newPinsListData.push(pins_list[i])
+      }
+    }
+    this.setState({
+      pins_list: newPinsListData
+    });
+  }
+
   render() {
-    const { opts, active } = this.state;
+    const { opts, active, pins_list = [] } = this.state;
     return (
       <View className='pins'>
         {/* banner广告区域 */}
@@ -118,9 +141,11 @@ class Pins extends Component {
 
           <View className='pins_wrapper_opts_list'>
             {
-              this.state.pins_list.map(pins => (
+              pins_list.length && pins_list.map(pins => (
                 <PinsItem key={pins._id} {...pins}
-                  onGo={this.handleGoToDetail}
+                  origin='pins'
+                  onGo={this.handleGoToDetail.bind(this)}
+                  onReFetchData={this.handleReFetchData.bind(this)}
                 />
               ))
             }
