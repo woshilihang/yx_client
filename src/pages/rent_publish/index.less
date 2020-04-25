@@ -1,0 +1,180 @@
+.rent_publish {
+  padding: 0 36px;
+
+  .header_search {
+    display: flex;
+    margin: 28px 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    .header_search_input {
+      flex: 1;
+      position: relative;
+      background-color: #f4f4f4;
+      border-radius: 20px;
+      line-height: 52px;
+      height: 52px;
+      padding: 4px 0 4px 58px;
+      box-sizing: border-box;
+      color: #333333;
+      font-weight: 300;
+      font-size: 28px;
+      margin-right: 32px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 10px;
+        display: block;
+        width: 32px;
+        height: 32px;
+        background: url('../../public/images/search.png') no-repeat center center;
+        background-size: 32px 32px;
+      }
+    }
+
+    .header_search_input-placeholder {
+      font-size: 26px;
+      color: #b2b2b2;
+    }
+
+    .header_msg {
+      border: none;
+      outline: none;
+      background: linear-gradient(to right, #303030, #636363);
+      color: #ffffff !important;
+      border-radius: 8px;
+      padding: 0 20px;
+      font-size: 30px;
+      height: 48px;
+      line-height: 48px;
+    }
+  }
+
+  .rent_map_container {
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 38px;
+
+    .rent_map {
+      width: 100%;
+      height: 320px;
+    }
+  }
+
+  .rent_publish_preview {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    .rent_publish_preview_img {
+      display: inline-block;
+      margin-bottom: 28px;
+      position: relative;
+      width: 228px;
+      height: 228px;
+      box-shadow: 0 0 6px 2px #f0f0f0;
+      border-radius: 32px;
+
+      &::after {
+        // 加一个删除的标志在右上角
+        position: absolute;
+        content: '';
+        right: 0px;
+        top: 5px;
+        background-color: red;
+        width: 48px;
+        height: 48px;
+      }
+    }
+
+    .rent_publish_get {
+      display: inline-block;
+      margin-bottom: 28px;
+      position: relative;
+      width: 228px;
+      height: 228px;
+      box-shadow: 0 0 6px 2px #f0f0f0;
+      border-radius: 32px;
+      background: url('../../public/images/img_upload.png') no-repeat;
+      background-size: 100px 100px;
+      background-position: 59px 59px;
+      margin-bottom: 50px;
+
+      .rent_publish_get_extra {
+        width: 100%;
+        text-align: center;
+        padding: 8px 0;
+        color: #a0a0a0;
+        font-size: 24px;
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, 100%);
+      }
+    }
+
+  }
+
+  .publish_preview_opts_area {
+    width: 100%;
+    box-shadow: 0 0 6px 2px #f0f0f0;
+    border-radius: 20px;
+    padding: 20px 0 0 20px;
+    margin: 30px 0 15px;
+    min-height: 300px !important;
+  }
+
+  .publish_preview_opts-placeholder {
+    font-size: 26px;
+    color: #868686;
+  }
+
+  .rent_info_list {
+    font-weight: 300;
+    margin: 30px 0;
+
+    .rent_info_list_item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 16px 0;
+      font-size: 28px;
+      color: #333333;
+
+      .rent_info_list_item_label {
+        color: #a0a0a0;
+        font-size: 28px;
+        min-width: 200px;
+      }
+
+      .rent_info_list_item_content {
+        flex: 1;
+        text-align: right;
+
+        .avatar_img {
+          width: 68px;
+          height: 68px;
+          border-radius: 50%;
+          background-color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+.self_atactionsheet {
+  border-radius: 20px;
+
+  .at-action-sheet__container {
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+.publish_btn {
+  margin: 50px 0 110px;
+}

@@ -4,31 +4,37 @@ export const OPTS_CITY = [
     id: 0,
     name: '全国',
     lang: '', // 空字符串默认为全国
+    belong: 'city'
   },
   {
     id: 1,
     name: '北京',
-    lang: 'beijing'
+    lang: 'beijing',
+    belong: 'city'
   },
   {
     id: 2,
     name: '上海',
-    lang: 'shanghai'
+    lang: 'shanghai',
+    belong: 'city'
   },
   {
     id: 3,
     name: '广州',
-    lang: 'guangzhou'
+    lang: 'guangzhou',
+    belong: 'city'
   }, 
   {
     id: 4,
     name: '深圳',
-    lang: 'shenzhen'
+    lang: 'shenzhen',
+    belong: 'city'
   }, 
   {
     id: 5,
     name: '杭州',
-    lang: 'hangzhou'
+    lang: 'hangzhou',
+    belong: 'city'
   },
 ]
 

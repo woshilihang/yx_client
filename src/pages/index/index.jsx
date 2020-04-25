@@ -497,7 +497,6 @@ class Index extends Component {
               </View>
               <View className='header_search'>
                 <Input
-                  focus
                   placeholderClass='header_search_input-placeholder'
                   className='header_search_input' confirm-type='search'
                   onInput={this.handleSearchInput}

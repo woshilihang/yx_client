@@ -20,7 +20,7 @@ class JDItem extends Component {
   }
 
   render() {
-    const { job_name, job_company, job_origin, job_type, job_city, job_id } = this.props;
+    const { job_name, job_company, job_origin, job_type, job_city, _id: job_id } = this.props;
     return (
       <View className='jd_item' onClick={() => {this.props.onGo(job_id)}}>
         <Image className='jd_item_img' src={job_company.imgUrl} />

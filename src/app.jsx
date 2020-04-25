@@ -31,6 +31,8 @@ class App extends Component {
 
   config = {
     pages: [
+      'pages/rent_publish/index',
+      'pages/rent/index',
       'pages/index/index',
       'pages/pins/index',
       'pages/demo/index',
@@ -44,12 +46,18 @@ class App extends Component {
       'pages/home/index',
       'pages/test/index',
       'pages/rent_detail/index',
-      'pages/rent/index',
+      
+      'pages/rent_auth/index',
+      
       'pages/my_publish/index',
       'pages/my_copy/index',
       'pages/my_info/index',
-      'pages/recordUpdate/index',
-      'pages/resume/index'
+      'pages/my_records/index',
+      'pages/my_msg/index',
+      'pages/my_track/index',
+      'pages/my_collect/index',
+      'pages/resume/index',
+
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -71,7 +79,7 @@ class App extends Component {
         text: "小公社",
         iconPath: './public/images/home.png',
         selectedIconPath: './public/images/home_selected..png',
-      },{
+      }, {
         pagePath: "pages/my/index",
         text: "我的",
         iconPath: './public/images/my.png',
@@ -85,7 +93,7 @@ class App extends Component {
     }
   }
 
-  
+
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
   render() {

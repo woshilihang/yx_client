@@ -281,6 +281,7 @@ class Publish extends Component {
               className='publish_preview_opts_area'
               placeholder='工作概要、申请要求及福利等'
               autoHeight
+              maxlength={-1}
               value={job_desc}
               onInput={(evt) => this.handleInputMsg(evt, 'job_desc')}
             />

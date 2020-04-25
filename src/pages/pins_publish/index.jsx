@@ -154,6 +154,7 @@ class PinsPublish extends Component {
             className='publish_preview_opts_area'
             placeholder='据说在此许愿，已经入职的前辈们会助力offer哦'
             autoHeight
+            maxlength={-1}
             value={pins_desc}
             onInput={(evt) => this.handleInputMsg(evt, 'pins_desc')}
           />

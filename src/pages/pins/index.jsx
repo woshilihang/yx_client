@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { View, Image, Text, Button } from '@tarojs/components';
 import PinsItem from '../../components/pinsItem/index';
 
-import testImg from '../../public/images/test.jpeg';
+// import testImg from '../../public/images/test.jpeg';
 // import '../../public/styles/common.less';
 // common样式不起作用
 import './index.less';
@@ -117,7 +117,7 @@ class Pins extends Component {
       <View className='pins'>
         {/* banner广告区域 */}
         <View className='banner'>
-          <Image className='banner_img' src={testImg} />
+          <Image className='banner_img' src='https://uploadfiles.nowcoder.com/images/20191115/999991356_1573798849904_2D17C168A3C204ACB9D89CA6B517DB73' />
         </View>
 
         <View className='pins_wrapper'>

@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text, Image, Button } from '@tarojs/components'
 
 import './index.less'
 
@@ -31,33 +31,19 @@ class My extends Component {
           id: 3,
           text: '收藏',
           iconPath: collect,
+          gotoUrl: `/pages/my_collect/index`
         },
         {
           id: 4,
           text: '足迹',
           iconPath: footerprint,
+          gotoUrl: `/pages/my_track/index`
         },
         {
           id: 5,
           text: '消息',
           iconPath: message,
-        }
-      ],
-      feedback_list: [
-        {
-          id: 1,
-          text: '更新记录',
-          goUrl: '',
-        },
-        {
-          id: 2,
-          text: '联系客服',
-          goUrl: '',
-        },
-        {
-          id: 1,
-          text: '意见反馈',
-          goUrl: '',
+          gotoUrl: `/pages/my_msg/index`
         }
       ],
       userInfo: {}
@@ -105,7 +91,7 @@ class My extends Component {
               )
             }
             <View className='header_content-edit'
-              onClick={() => Taro.navigateTo({url: '/pages/my_info/index'})}
+              onClick={() => Taro.navigateTo({ url: '/pages/my_info/index' })}
             >
               编辑个人资料
               <Text> &gt; </Text>
@@ -131,18 +117,32 @@ class My extends Component {
 
         {/* 反馈相关功能 */}
         <View className='feedback_list'>
-          {
-            this.state.feedback_list.map(feedback_item => (
-              <View className='feedback_item' key={feedback_item.id}>
-                <Text className='feedback_item_txt'>
-                  {feedback_item.text}
-                </Text>
-                <Text className='feedback_item_icon'>
-                  {/* &gt; */}
-                </Text>
-              </View>
-            ))
-          }
+          <View className='feedback_item' onClick={this.handleOperClick.bind(this, '/pages/my_records/index')}>
+            <Text className='feedback_item_txt'>
+              更新记录
+            </Text>
+            <Text className='feedback_item_icon'>
+              {/* &gt; */}
+            </Text>
+          </View>
+          <View className='feedback_item'>
+            <Button className=' omit_btn_sty' openType='contact'>
+              <Text className='feedback_item_txt'>
+                联系客服
+            </Text>
+              <Text className='feedback_item_icon'>
+              </Text>
+            </Button>
+          </View>
+          <View className='feedback_item'>
+            <Button className=' omit_btn_sty' openType='feedback'>
+              <Text className='feedback_item_txt'>
+                意见反馈
+            </Text>
+              <Text className='feedback_item_icon'>
+              </Text>
+            </Button>
+          </View>
         </View>
       </View>
     )

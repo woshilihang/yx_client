@@ -23,8 +23,8 @@ class PinsItem extends Component {
 
   getDomInfoStr = (desc, info) => {
     const imgStr = info.map(img => {
-      return `<img src="${rootUrl}/${img}" style='width: 200px;
-      height: 250px;' />`;
+      return `<img src='${rootUrl}${img}' style='width: 33vw;margin-right: 5vw;
+      height: 33vw;' />`;
     }).join('');
     let desc_info = replaceSpaceToBr(desc) + '<Br />';
     return '<p style="margin: 0px 0 16px;">' + desc_info + '</p>' + imgStr;
