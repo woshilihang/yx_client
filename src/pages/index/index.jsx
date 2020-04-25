@@ -461,6 +461,7 @@ class Index extends Component {
         <AtActionSheet className='self_atactionsheet' isOpened={isOpened}
           cancelText='取消'
           onCancel={this.handleCancel}
+          onClose={this.handleCancel}
         >
           {
             OPTS_CITY.map(city => (

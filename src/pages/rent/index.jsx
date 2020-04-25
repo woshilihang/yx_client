@@ -218,6 +218,11 @@ class Rent extends Component {
       url: `/pages/rent_auth/index`
     })
   }
+  handleGoDetail(rent_id) {
+    Taro.navigateTo({
+      url: `/pages/rent_detail/index?rent_id=${rent_id}`
+    })
+  }
   render() {
     const { search_val, opts_list, sheet_list, isOpened, rent_list = [] } = this.state;
     return (
@@ -226,6 +231,7 @@ class Rent extends Component {
         <AtActionSheet className='self_atactionsheet' isOpened={isOpened}
           cancelText='取消'
           onCancel={this.handleCancel}
+          onClose={this.handleCancel}
         >
           {
             sheet_list.map(city => (
@@ -265,7 +271,7 @@ class Rent extends Component {
           <View className='rent_wrapper_opts_list'>
             {
               rent_list.length && rent_list.map(rent => (
-                <RentItem key={rent._id}  {...rent} />
+                <RentItem key={rent._id}  {...rent} onGo={this.handleGoDetail.bind(this)} />
               ))
             }
           </View>
