@@ -9,6 +9,7 @@ import './index.less'
 import pageInit from '../../components/pageInit';
 import { OPTS_CITY } from '../../constants';
 import RentItem from '../../components/RentItem';
+import { fetchRentList } from '../../client';
 
 @pageInit()
 class Rent extends Component {
@@ -52,23 +53,21 @@ class Rent extends Component {
       ],
       isOpened: false,
       sheet_list: [],
-      rent_list: [
-        {
-          _id: '1123',
-          rent_img: 'https://img10.360buyimg.com/ling/jfs/t1/103195/16/19813/256783/5ea170aeE02b283d7/668b27c28863bac7.jpg',
-          userInfo: {
-            nickName: 'test',
-          }
-        },
-        {
-          _id: '1123',
-          rent_img: 'https://img11.360buyimg.com/ling/jfs/t1/113645/40/2325/202915/5ea170b1Ecef27ae4/5856c434a61e3b38.jpg',
-          userInfo: {
-            nickName: 'test',
-          }
-        },
-      ],
+      active: 'all',
+      currPageNum: 1,
+      total: 0,
+      rent_list: [],
     }
+  }
+  async componentDidMount() {
+    let res = await fetchRentList();
+    console.log(res, '=== 租房信息接口返回res ===');
+    const { list: rent_list, currentNum, total } = res;
+    this.setState({
+      rent_list,
+      currPageNum: currentNum,
+      total
+    })
   }
 
   config = {
@@ -81,6 +80,7 @@ class Rent extends Component {
       title: '友享社区，解决你的校园&职前问题！！'
     }
   }
+
 
   handleSearchInput = (evt) => {
     this.setState({
@@ -190,6 +190,7 @@ class Rent extends Component {
       isOpened: false
     }, () => {
       if (id === 'shortRent') {
+        // TODO: 这里可能还存在一些问题
         this.changeOptsActive(id);
       } else {
         const sheetList = this.getSheetListData(id)
@@ -219,6 +220,7 @@ class Rent extends Component {
     })
   }
   handleGoDetail(rent_id) {
+    console.log(rent_id, 'rent_id --- 点击')
     Taro.navigateTo({
       url: `/pages/rent_detail/index?rent_id=${rent_id}`
     })

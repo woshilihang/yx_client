@@ -31,10 +31,17 @@ export const fetchJobpublish = params => http.post('/job/publish', params)
 // 沸点专区模块接口
 export const fetchPinsList = async url => http.get(url);
 
-export const fetchPinsPublish = params => http.post('/pins/publish', params)
+export const fetchPinsPublish = params => http.post('/pins/publish', params);
 
 // 沸点详情
-export const fetchPinsDetail = params => http.get('/pins/detail', params)
+export const fetchPinsDetail = params => http.get('/pins/detail', params);
 
 // 沸点点赞
-export const fetchPinsPrize = params => http.post('/pins/prize', params)
+export const fetchPinsPrize = params => http.post('/pins/prize', params);
+
+// 租房相关
+export const fetchRentList = async params => http.get('/rent/list', params);
+
+export const publishRentInfo = params => http.post('/rent/publish', params);
+
+export const fetchRentDetail = async params => http.get('/rent/detail', params);

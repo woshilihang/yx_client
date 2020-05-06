@@ -4,6 +4,10 @@ import { AtSlider } from 'taro-ui'
 
 import "taro-ui/dist/style/components/slider.scss";
 import './index.less';
+import { fetchRentDetail } from '../../client';
+import { rootUrl } from '../../config';
+import { transLangToName } from '../../utils/common';
+import { OPTS_CITY } from '../../constants';
 
 class Home extends Component {
   constructor() {
@@ -12,12 +16,43 @@ class Home extends Component {
       longitude: '',
       latitude: '',
       scaleRate: 14,
-      rent_desc: '转租，可以月付，可以短租，合同到期可续签, 转租，可以月付，可以短租，合同到期可续签,转租，可以月付，可以短租，合同到期可续签',
-      rent_price: '2000',
-      phoneNumber: '18296542194'
+      rent_desc: '',
+      rent_price: '',
+      phoneNumber: '',
+      rent_imgList: [],
+      rent_city: '',
+      rent_canShortRent: false,
+      userInfo: {}
     }
   }
-  componentDidMount() {
+  async componentDidMount() {
+    const { rent_id } = this.$router.params;
+    let res = await fetchRentDetail({
+      rent_id
+    })
+    console.log('=== 获取租房信息返回接口 ===', res)
+    const {
+      rent_imgList = [],
+      latitude,
+      longitude,
+      rent_city,
+      rent_desc,
+      rent_price,
+      rent_canShortRent,
+      userInfo = {},
+      rent_tel
+    } = res;
+    this.setState({
+      latitude,
+      longitude,
+      rent_imgList,
+      rent_city,
+      rent_desc,
+      rent_price,
+      rent_canShortRent,
+      userInfo,
+      phoneNumber: rent_tel
+    })
   }
 
   config = {
@@ -31,24 +66,26 @@ class Home extends Component {
   }
 
   handleContactClick() {
+    console.log('=== 即将拨打电话 ===', this.state.phoneNumber);
     Taro.makePhoneCall({
       phoneNumber: this.state.phoneNumber
     });
   }
 
   render() {
-    const { longitude, latitude, address = '北京', scaleRate, rent_desc, rent_price } = this.state;
+    const { longitude, latitude, rent_city, scaleRate, rent_desc, rent_price, rent_imgList, userInfo = {} } = this.state;
+    const { avatar, nickName, gender, company } = userInfo;
     return (
       <View className='rent_detail'>
         <View className='rent_map_address'>
-          {address}
+          {transLangToName(OPTS_CITY, rent_city)}
         </View>
         <View className='rent_map_container'>
           <Map
             className='rent_map'
             id='container'
-            // longitude={longitude}
-            // latitude={latitude}
+            longitude={longitude}
+            latitude={latitude}
             showLocation
             showCompass
             showScale
@@ -79,17 +116,24 @@ class Home extends Component {
         </View>
 
         <View className='rent_detail_review flex'>
-          <Image className='avatar' src='http://t7.baidu.com/it/u=3616242789,1098670747&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588419768&t=75098bd0bc3df7fa6e00ac8531dd7d40' />
+          <Image className='avatar' src={avatar} />
           <View className='info_user'>
-            <Text className='info_name'>Echo</Text>
-            <Text className='info_gender'>女生</Text>
+            <Text className='info_name'>{nickName}</Text>
+            <Text className='info_gender'>{company} {gender}</Text>
           </View>
-          <Button className='contact' onClick={this.handleContactClick.bind(this)}>联系TA{}</Button>
+          <Button className='contact' onClick={this.handleContactClick.bind(this)}>联系{gender == '男' ? '他' : '她'}</Button>
         </View>
 
         <View className='rent_detail_imgs'>
-          <Image className='rent_detail_img' src='http://t8.baidu.com/it/u=3571592872,3353494284&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588419768&t=4db1f6e2af62e8c8feb5a80d5b5bab9b' />
-          <Image className='rent_detail_img' src='http://t7.baidu.com/it/u=3225540498,2642373837&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588419768&t=238f3a659aae6694d22526b9cb827c6f' />
+          {
+            rent_imgList.map((rent_img, idx) => (
+              <Image
+                key={idx}
+                className='rent_detail_img'
+                src={`${rootUrl}${rent_img}`}
+              />
+            ))
+          }
         </View>
 
         <View className='rent_detail_footer'>

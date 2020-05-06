@@ -7,12 +7,13 @@ import { OPTS_CITY } from '../../constants';
 
 import '../../public/styles/common.less'
 import './index.less'
+import { publishRentInfo } from '../../client';
 
 class RentPublish extends Component {
   constructor() {
     super(...arguments);
     this.state = {
-      origin: this.$router.params.origin || 'findHouse',
+      rent_origin: this.$router.params.rent_origin || 'findHouse',
       longitude: '', // 经度
       latitude: '', // 纬度
       markers: [],
@@ -21,10 +22,10 @@ class RentPublish extends Component {
       tempFiles: [], // 临时上传文件 {path: '', size: ''}
       rent_desc: '', // 租房描述
       isOpened: false, // 是否显示
-      price: '', // 租房意向价格
-      wx: '', // 微信号
+      rent_price: '', // 租房意向价格
+      rent_tel: '', // 手机号
       gender: '', // 性别
-      canShortRent: false, // 是否接受短租
+      rent_canShortRent: false, // 是否接受短租
     }
   }
 
@@ -35,6 +36,7 @@ class RentPublish extends Component {
     Taro.getLocation({
       type: 'wgs84',
       success(res) {
+        console.log(res, '获取位置地理信息数据 === ')
         _this.setState({
           latitude: res.latitude,
           longitude: res.longitude
@@ -69,7 +71,7 @@ class RentPublish extends Component {
 
   config = {
     // TODO: 晚点同步
-    navigationBarTitleText: `${this.state.origin || '发布'}·友享社区`
+    navigationBarTitleText: `${this.state.rent_origin || '发布'}·友享社区`
   }
 
   handleSearchClick() {
@@ -180,13 +182,20 @@ class RentPublish extends Component {
     })
   }
 
-  matchPlaceHolderTxt = (origin) => {
+  matchPlaceHolderTxt = (rent_origin) => {
+    console.log(rent_origin, 'rent_origin --- ')
     const keyMapTxt = {
       'findHouse': '描述求租开始时间和期限，期望主卧次卧，几人间，本人工作地点，毕业学校，年龄和爱好等情况',
-      'findFriends': '',
+      'findFriend': '描述出租方式，如押一付三，半年起租，楼层，是否有电梯，有无家具情况',
     }
 
-    return keyMapTxt[origin] || ''
+    return keyMapTxt[rent_origin] || ''
+  }
+
+  handleInputMsg = (evt, name) => {
+    this.setState({
+      [name]: evt.detail.value
+    });
   }
 
   handleAtActionSheetClick(city) {
@@ -209,14 +218,40 @@ class RentPublish extends Component {
     })
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     // TODO: 发布租房信息
+    console.log(this.state, ' --- this.state ---')
+    const { currCity={}, gender, latitude, longitude, rent_origin, rent_price, rent_tel, rent_desc, tempFiles, rent_canShortRent } = this.state;
+    const rent_imgList = tempFiles.map(file => file.imgUrl);
+    const params = {
+      rent_origin,
+      latitude,
+      longitude,
+      rent_imgList,
+      rent_city: currCity.lang,
+      rent_desc,
+      rent_price,
+      rent_canShortRent,
+      gender,
+      rent_tel
+    };
+    const extraFindFriendParams = rent_origin == 'findFriend' ? {
+      rent_canShortRent
+    }: {}
+    const _saveParams = Object.assign({}, params, extraFindFriendParams)
+    console.log(_saveParams, '_saveParams --- ')
+
+    let res = await publishRentInfo(_saveParams)
+    console.log(res, '== 租房提交信息 ==');
+    Taro.navigateTo({
+      url: '/page/rent/index'
+    })
   }
 
   render() {
-    const { latitude, longitude, markers, rent_desc, origin, isOpened, currCity, gender } = this.state;
+    const { latitude, longitude, markers, rent_desc, rent_origin, isOpened, currCity, gender } = this.state;
     console.log(gender, 'gender ---')
-    let placeholderTxt = this.matchPlaceHolderTxt(origin)
+    let placeholderTxt = this.matchPlaceHolderTxt(rent_origin)
     return (
       <View className='rent_publish'>
         <View className='header_search'>
@@ -275,7 +310,7 @@ class RentPublish extends Component {
           autoHeight
           value={rent_desc}
           maxlength={-1}
-          onInput={(evt) => this.handleInputMsg(evt, 'pins_desc')}
+          onInput={this.handleContentInput.bind(this, 'rent_desc')}
         />
 
         <View className='rent_info_list'>
@@ -283,6 +318,7 @@ class RentPublish extends Component {
             <Text className='rent_info_list_item_label'>城市: </Text>
             <Text className='rent_info_list_item_content'
               onClick={() => {
+                console.log('城市点击了')
                 this.setState({
                   isOpened: true
                 })
@@ -294,14 +330,14 @@ class RentPublish extends Component {
           <View className='rent_info_list_item'>
             <Text className='rent_info_list_item_label'>意向价格: </Text>
             <Input className='rent_info_list_item_content'
-              onInput={this.handleContentInput.bind(this, 'price')}
+              onInput={this.handleContentInput.bind(this, 'rent_price')}
             />
             <Text>￥/月</Text>
           </View>
 
           <View className='rent_info_list_item'>
             {
-              origin == 'findHouse' ? (
+              rent_origin == 'findHouse' ? (
                 <Text className='rent_info_list_item_label'>本人性别: </Text>
               ) : (
                   <Text className='rent_info_list_item_label'>要求性别: </Text>
@@ -327,17 +363,21 @@ class RentPublish extends Component {
             </RadioGroup>
           </View>
 
+          {
+            rent_origin == 'findFriend' && (
+              <View className='rent_info_list_item'>
+                <Text className='rent_info_list_item_label'>是否接受短租(三个月内): </Text>
+                <Switch className='rent_info_list_item_content'
+                  style={{ transform: 'scale(0.8);', marginRight: '-8%' }}
+                  onChange={this.handleContentInput.bind(this, 'rent_canShortRent')}
+                />
+              </View>
+            )
+          }
           <View className='rent_info_list_item'>
-            <Text className='rent_info_list_item_label'>是否接受短租(三个月内): </Text>
-            <Switch className='rent_info_list_item_content'
-              style={{ transform: 'scale(0.8);', marginRight: '-8%' }}
-              onChange={this.handleContentInput.bind(this, 'canShortRent')}
-            />
-          </View>
-          <View className='rent_info_list_item'>
-            <Text className='rent_info_list_item_label'>微信号: </Text>
+            <Text className='rent_info_list_item_label'>手机号: </Text>
             <Input className='rent_info_list_item_content'
-              onInput={this.handleContentInput.bind(this, 'wx')}
+              onInput={this.handleContentInput.bind(this, 'rent_tel')}
               placeholder='请输入'
             />
           </View>

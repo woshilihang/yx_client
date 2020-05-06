@@ -3,6 +3,7 @@ import { View, Text, Image } from '@tarojs/components';
 
 import './index.less';
 import testImg from '../../public/images/test.jpeg'
+import { rootUrl } from '../../config';
 
 class RentItem extends Component {
 
@@ -13,12 +14,12 @@ class RentItem extends Component {
 
 
   render() {
-    const { _id: rent_id = '', rent_img, rent_price = '￥4000', rent_type = '求室友', userInfo = {}, onGo, rent_desc='珠江四季悦城大三居，业主新收房，一次没住过，可办公，可添加新家具，卧式采光好，储存空间大' } = this.props;
+    const { _id: rent_id = '', rent_imgList=[], rent_price = '￥4000', rent_type = '求室友', userInfo = {}, onGo, rent_desc='珠江四季悦城大三居，业主新收房，一次没住过，可办公，可添加新家具，卧式采光好，储存空间大' } = this.props;
     const { nickName, company = '京东', job_type = '业务', avatar = testImg } = userInfo;
     return (
-      <View className='rent_item' onClick={(evt) => onGo(evt, rent_id)}>
+      <View className='rent_item' onClick={() => onGo(rent_id)}>
         <View className='rent_item_wrapper'>
-          <Image className='rent_item_wrapper_img' src={rent_img} />
+          <Image className='rent_item_wrapper_img' src={`${rootUrl}${rent_imgList[0]}`} />
 
           <View className='rent_item_wrapper_content'>
             <View className='rent_item_header'>

@@ -136,7 +136,7 @@ class MyInfo extends Component {
             />
           </View>
           <View className='my_info_list_item'>
-            <Text className='my_info_list_item_label'>微信号</Text>
+            <Text className='my_info_list_item_label'>手机号</Text>
             <Input className='my_info_list_item_content'
               onInput={this.handleContentInput.bind(this, 'wx')}
               value={wx}
