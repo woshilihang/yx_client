@@ -4,7 +4,7 @@ import { AtSlider } from 'taro-ui'
 
 import "taro-ui/dist/style/components/slider.scss";
 import './index.less';
-import { fetchRentDetail } from '../../client';
+import { setCollectInfo, fetchRentDetail, getCollectInfo } from '../../client';
 import { rootUrl } from '../../config';
 import { transLangToName } from '../../utils/common';
 import { OPTS_CITY } from '../../constants';
@@ -22,7 +22,8 @@ class Home extends Component {
       rent_imgList: [],
       rent_city: '',
       rent_canShortRent: false,
-      userInfo: {}
+      userInfo: {},
+      isCollected: '', // 是否收藏
     }
   }
   async componentDidMount() {
@@ -30,6 +31,10 @@ class Home extends Component {
     let res = await fetchRentDetail({
       rent_id
     })
+    let { isCollected } = await getCollectInfo({
+      content_id: rent_id,
+      collect_origin: 'rent'
+    });
     console.log('=== 获取租房信息返回接口 ===', res)
     const {
       rent_imgList = [],
@@ -51,7 +56,8 @@ class Home extends Component {
       rent_price,
       rent_canShortRent,
       userInfo,
-      phoneNumber: rent_tel
+      phoneNumber: rent_tel,
+      isCollected
     })
   }
 
@@ -72,8 +78,25 @@ class Home extends Component {
     });
   }
 
+  async handleCollectEvt() {
+    const { rent_id } = this.$router.params;
+    let res = await setCollectInfo({
+      collect_origin: 'rent',
+      content_id: rent_id
+    });
+    const { isCollected } = res;
+    Taro.showToast({
+      title: isCollected ? '收藏成功' : '取消收藏',
+      icon: 'none'
+    });
+    this.setState({
+      isCollected
+    })
+    console.log(res, '=== 收藏返回相应结果 ===');
+  }
+
   render() {
-    const { longitude, latitude, rent_city, scaleRate, rent_desc, rent_price, rent_imgList, userInfo = {} } = this.state;
+    const { longitude, latitude, rent_city, scaleRate, rent_desc, rent_price, rent_imgList, userInfo = {}, isCollected } = this.state;
     const { avatar, nickName, gender, company } = userInfo;
     return (
       <View className='rent_detail'>
@@ -137,8 +160,10 @@ class Home extends Component {
         </View>
 
         <View className='rent_detail_footer'>
-          <View className='rent_detail_footer_item collect'>
-            收藏
+          <View className={`rent_detail_footer_item collect ${isCollected ? 'isCollected' : ''}`}
+            onClick={this.handleCollectEvt.bind(this)}
+          >
+            { isCollected ? '取消收藏': '收藏' }
           </View>
           <View className='rent_detail_footer_item posts'>
             生成详情海报

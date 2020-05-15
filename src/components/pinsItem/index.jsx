@@ -53,7 +53,7 @@ class PinsItem extends Component {
   }
 
   render() {
-    const { _id: pins_id = '', pins_desc = '', pins_comment, pins_prize_num, pins_imgList, userInfo, onGo, pins_prize_self = false } = this.props;
+    const { _id: pins_id = '', pins_desc = '', pins_comment, pins_prize_num, pins_imgList, userInfo, onGo, pins_prize_self = false, replyList = [] } = this.props;
     const { nickName, company, job_type, avatar } = userInfo;
     console.log(this.props, 'this.props')
     let str = this.getDomInfoStr(pins_desc, pins_imgList);
@@ -89,8 +89,8 @@ class PinsItem extends Component {
           <View className={`pins_item_item like ${pins_prize_self ? 'like_ed' : ''}`} onClick={this.handlePrizeCLick.bind(this)}>
             <Text>{pins_prize_num}</Text>
           </View>
-          <View className='pins_item_item comment'>
-            <Text>{pins_comment}</Text>
+          <View className='pins_item_item comment' onClick={(evt) => this.props.onChangeTargetComment(evt, true, pins_id)}>
+            <Text>{replyList.length}</Text>
           </View>
           <View className='pins_item_item forward'>
             <Text>0</Text>

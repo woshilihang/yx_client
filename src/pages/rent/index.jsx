@@ -57,17 +57,11 @@ class Rent extends Component {
       currPageNum: 1,
       total: 0,
       rent_list: [],
+      canShortRent: ''
     }
   }
-  async componentDidMount() {
-    let res = await fetchRentList();
-    console.log(res, '=== 租房信息接口返回res ===');
-    const { list: rent_list, currentNum, total } = res;
-    this.setState({
-      rent_list,
-      currPageNum: currentNum,
-      total
-    })
+  async componentDidShow() {
+    await this.fetchFilterSuitData();
   }
 
   config = {
@@ -79,6 +73,32 @@ class Rent extends Component {
     return {
       title: '友享社区，解决你的校园&职前问题！！'
     }
+  }
+
+  async fetchFilterSuitData() {
+    // {price: 1, sex: 1, city: beijing}此类结构
+    const { currPageNum, canShortRent } = this.state;
+    let params = this.state.opts_list.reduce((curr, item) => {
+      if (item.id && item.lang) {
+        curr[item.id] = item.lang
+        return curr
+      }
+      
+      return curr
+    }, {});
+
+    console.log(params, '=== 筛选数据请求参数 ===');
+    let res = await fetchRentList({
+      ...params,
+      canShortRent
+    });
+    console.log(res, '=== 租房信息接口返回res ===');
+    const { list, currentNum, total } = res;
+    this.setState({
+      rent_list: currPageNum > 1 ? this.state.rent_list.concat(list) : list,
+      currPageNum: currentNum,
+      total
+    })
   }
 
 
@@ -94,13 +114,13 @@ class Rent extends Component {
     // 关键字搜索结果展示
   }
 
-  changeOptsActive = ({id, lang, name}) => {
+  changeOptsActive = ({ id, lang, name }) => {
     let newOptsList = []
     this.state.opts_list.forEach(opts => {
-      if(id === opts.id) {
+      if (id === opts.id) {
         newOptsList.push({
           ...opts,
-          lang: id === opts.id ? lang: '', // 存储英文值
+          lang: id === opts.id ? lang : '', // 存储英文值
           curr_val: (id === opts.id && name && lang) ? name : ''
         });
       } else {
@@ -110,6 +130,9 @@ class Rent extends Component {
     this.setState({
       opts_list: newOptsList,
       isOpened: false
+    }, async () => {
+      // TODO: 改变筛选字段，数据重新进行搜索
+      await this.fetchFilterSuitData();
     });
   }
 
@@ -126,13 +149,13 @@ class Rent extends Component {
         {
           id: 1,
           name: '高到低',
-          lang: '1',
+          lang: '-1',
           belong: 'price'
         },
         {
           id: 2,
           name: '低到高',
-          lang: '2',
+          lang: '1',
           belong: 'price'
         },
       ],
@@ -191,7 +214,11 @@ class Rent extends Component {
     }, () => {
       if (id === 'shortRent') {
         // TODO: 这里可能还存在一些问题
-        this.changeOptsActive(id);
+        this.setState({
+          canShortRent: !this.state.canShortRent
+        }, async () => {
+          await this.fetchFilterSuitData();
+        })
       } else {
         const sheetList = this.getSheetListData(id)
         this.setState({
@@ -203,9 +230,9 @@ class Rent extends Component {
   }
 
   handleAtActionSheetClick(city) {
-    const {belong, lang, name} = city
+    const { belong, lang, name } = city
     console.log(111, city, belong, lang, name)
-    this.changeOptsActive({id: belong, lang, name});
+    this.changeOptsActive({ id: belong, lang, name });
   }
 
   handleCancel = () => {
@@ -252,7 +279,7 @@ class Rent extends Component {
             {
               opts_list.map(opts => (
                 <View
-                  className={`rent_wrapper_opts_item ${opts.id === 'shortRent' ? '' : 'opts'} ${opts.curr_val ? 'active' : ''}`} key={opts.id}
+                  className={`rent_wrapper_opts_item ${opts.id === 'shortRent' ? '' : 'opts'} ${(opts.curr_val || (opts.id == 'shortRent' && this.state.canShortRent)) ? 'active' : ''}`} key={opts.id}
                   onClick={this.handleFilterClick.bind(this, opts.id)}
                 >
                   {opts.curr_val || opts.name}

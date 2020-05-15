@@ -82,6 +82,7 @@ export const transLangToName = (keyMap, langList) => {
  * @memberof Offer
  */
 export const drawImage = async () => {
+  console.log('开始绘制')
   let ctx = Taro.createCanvasContext('cardCanvas');
 
   // 填充背景色

@@ -66,7 +66,7 @@ class MyFooter extends Component {
               <Image className='footer_container_opts_item_icon' src={JOB_DETAIL_ICON.share} />
               <Text className='footer_container_opts_item_txt'>分享</Text>
             </Button>
-            <View className='footer_container_opts_item'>
+            <View className='footer_container_opts_item' onClick={(evt) => this.props.onDrawImg(evt)}>
               <Image className='footer_container_opts_item_icon' src={JOB_DETAIL_ICON.post} />
               <Text className='footer_container_opts_item_txt'>海报</Text>
             </View>

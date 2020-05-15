@@ -33,6 +33,9 @@ export const fetchPinsList = async url => http.get(url);
 
 export const fetchPinsPublish = params => http.post('/pins/publish', params);
 
+// 发布评论
+export const publishComment = async params => http.post('/reply/publish', params);
+
 // 沸点详情
 export const fetchPinsDetail = params => http.get('/pins/detail', params);
 
@@ -45,3 +48,11 @@ export const fetchRentList = async params => http.get('/rent/list', params);
 export const publishRentInfo = params => http.post('/rent/publish', params);
 
 export const fetchRentDetail = async params => http.get('/rent/detail', params);
+
+// 收藏相关
+export const setCollectInfo = async params => http.post('/collect/set', params);
+
+export const getCollectInfo = async params => http.post('/collect/get', params);
+
+export const getCollectList = async params => http.get('/collect/list', params);
+

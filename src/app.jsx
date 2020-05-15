@@ -31,8 +31,8 @@ class App extends Component {
 
   config = {
     pages: [
-      'pages/rent/index',
       'pages/index/index',
+      'pages/my_collect/index',
       'pages/pins/index',
       'pages/demo/index',
       'pages/job_detail/index',
@@ -44,7 +44,7 @@ class App extends Component {
       'pages/publish/index',
       'pages/home/index',
       'pages/test/index',
-     
+      'pages/rent/index',
       'pages/rent_detail/index',
       'pages/rent_auth/index',
       'pages/rent_publish/index',
@@ -54,7 +54,7 @@ class App extends Component {
       'pages/my_records/index',
       'pages/my_msg/index',
       'pages/my_track/index',
-      'pages/my_collect/index',
+      
       'pages/resume/index',
 
     ],

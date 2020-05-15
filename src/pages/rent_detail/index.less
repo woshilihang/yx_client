@@ -156,6 +156,7 @@
     left: 0;
     right: 0;
     height: 100px;
+    line-height: 100px;
     z-index: 999;
     background-color: #ffffff;
     color: #333333;
@@ -164,11 +165,15 @@
       flex: 1;
       text-align: center;
       position: relative;
+      height: 100px;
+      &.isCollected {
+        color: red;
+      }
       &.collect::before {
         content: '';
         position: absolute;
-        left: 102px;
-        top: -3px;
+        left: 77px;
+        top: 25px;
         width: 50px;
         height: 50px;
         background: url('../../public/images/rent_collect.png') no-repeat center center;
@@ -178,7 +183,7 @@
         content: '';
         position: absolute;
         left: 32px;
-        top: -3px;
+        top: 25px;
         width: 50px;
         height: 50px;
         background: url('../../public/images/rent_posts.png') no-repeat center center;

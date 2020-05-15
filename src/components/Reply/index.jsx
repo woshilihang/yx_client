@@ -13,14 +13,17 @@ class Reply extends Component {
 
   render() {
     console.log(this.props);
-    const { reply_content, userInfo = {}, reply_childs = [] } = this.props;
+    const { reply_content, userInfo = {}, reply_childs = [], _id } = this.props;
     const { nickName, avatar } = userInfo;
     return (
       <View className='reply'>
         <Image className='reply_avatar' src={avatar} />
         <View className='reply_info'>
           <View className='reply_info_title'>{nickName}</View>
-          <View className='reply_info_content'>
+          <View className='reply_info_content' onClick={(evt) => {
+            this.props.onChangeTargetComment(evt, false, _id)
+          }}
+          >
             <View className='reply_info_desc'>{reply_content}</View>
             {
               reply_childs.length && <View className='reply_other_list'>
